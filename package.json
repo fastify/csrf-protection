@@ -1,0 +1,30 @@
+{
+  "name": "fastify-csrf",
+  "version": "1.0.0",
+  "description": "a csrf plugin for fastify",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tarang11/fastify-csrf.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tarang11/fastify-csrf/issues"
+  },
+  "homepage": "https://github.com/Tarang11/fastify-csrf#readme",
+  "dependencies": {
+    "csrf": "^3.0.6",
+    "fastify-plugin": "^1.4.0"
+  },
+  "devDependencies": {
+    "axios": "^0.18.0",
+    "fastify": "^1.13.3",
+    "fastify-cookie": "^2.1.5",
+    "fastify-session": "^1.2.1",
+    "jest": "^23.6.0"
+  }
+}
