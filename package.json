@@ -25,6 +25,6 @@
     "fastify": "^1.13.3",
     "fastify-cookie": "^2.1.5",
     "fastify-session": "^1.2.1",
-    "jest": "^23.6.0"
+    "tap": "^12.1.1"
   }
 }
