@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Tarang11/fastify-csrf#readme",
   "dependencies": {
     "csrf": "^3.0.6",
+    "fastify-formbody": "^2.0.3",
     "fastify-plugin": "^1.4.0"
   },
   "devDependencies": {
