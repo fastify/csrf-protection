@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "axios": "^0.18.0",
+    "connect-redis": "^3.4.0",
     "fastify": "^1.13.3",
     "fastify-cookie": "^2.1.5",
     "fastify-session": "^1.2.1",
