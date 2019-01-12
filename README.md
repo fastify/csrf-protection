@@ -28,7 +28,7 @@ Requires fastify-cookie (for cookie based CSRF token validation) or fastify-sess
  Other properties related to cookie can be set normally.
  
  ```js 
-  { cookie: { path: '/', maxAge: /* your maxAge value */, expires: /* cookie expiry time */ , /* other cookie properties */ }
+  { cookie: { path: '/', maxAge: /* your maxAge value */, expires: /* cookie expiry time */ ,/* other cookie properties */}}
   ```
  
 Session based validation options
