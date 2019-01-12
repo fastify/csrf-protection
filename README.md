@@ -32,7 +32,7 @@ Requires fastify-cookie (for cookie based CSRF token validation) or fastify-sess
   ```
  
 Session based validation options
-For using session validation, skip cookie option and use other options according to you requirements.
+For using session validation, skip cookie option and use other options according to your requirement.
 ```js 
  { key: 'your_secret_key_name', ignoreMethods: [/* request types */] }
  ```
