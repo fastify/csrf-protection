@@ -9,15 +9,21 @@ Requires fastify-cookie (for cookie based CSRF token validation) or fastify-sess
  ### options 
  #### cookie
  cookie set to true will use cookie for storing _csrf secret in browser cookie.
- ```js { cookie: true } ```
+ ```js 
+  { cookie: true } 
+ ```
 
  #### key 
- ```js { cookie: true, key: '_csrf_custom' }  ```
+ ```js 
+  { cookie: true, key: '_csrf_custom' }
+ ```
  this will set cookie with a name _csrf_custom.
  
  #### ignoreMethods 
  
- ```js { cookie: true, ignoreMethods: ['GET', 'HEAD', /* other request type */] ```js 
+ ```js 
+  { cookie: true, ignoreMethods: ['GET', 'HEAD', /* other request type */] 
+  ``` 
  ignoreMethods takes a array of request type to skip validation for particular request type.
 
 # Usage
