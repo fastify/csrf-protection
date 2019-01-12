@@ -294,7 +294,7 @@ test('csrf token authentication session based (defaults: memory store, _csrf ses
 				t.end();
 			})
 			.catch((err) => {
-				t.error('invalid csrf token');
+				t.error(err, 'invalid csrf token');
 				t.end();
 			});
 			
@@ -345,7 +345,58 @@ test('csrf token authentication session based (defaults: memory store) _csrf_cus
 				t.end();
 			})
 			.catch((err) => {
-				t.error('invalid csrf token');
+				t.error(err, 'invalid csrf token');
+				t.end();
+			});
+			
+		})
+		.catch((err) => {
+			t.error(err);
+			t.end()
+		});
+	});
+});
+
+test('csrf token authentication session based ignore method(POST)', (t) => {
+	t.plan(2);
+	const fastify = Fastify();
+	fastify.register(fastifyCookie);
+	fastify.register(fastifySession, { cookieName: '_ses', cookie: { path: '/',secure: false },  secret: 'a secret with minimum length of 32 characters' });
+	fastify.register(fastifyFormBody);
+	fastify.register(fastifyCsrf, { ignoreMethods: ['POST', 'GET'] });
+	
+	fastify.get('/', (request, reply) => {
+		console.log(request.csrfToken())
+		reply.send({ csrf_secret: request.csrfToken() });
+	});
+
+	fastify.post('/data', (request, reply) => {
+		reply.send({ status: 'ok' });
+	});
+
+	fastify.listen(0, (err) => {
+		fastify.server.unref();
+		t.error(err);
+		axios({
+			method: 'get', 
+			url: 'http://localhost:'+ fastify.server.address().port +'/'
+		})
+		.then((response) => {
+			axios({
+				url: 'http://localhost:'+ fastify.server.address().port+'/data',
+				method: 'POST',
+				headers: { 
+					'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8', 
+					"Content-Type": "application/x-www-form-urlencoded",
+					'Cookie': `${ response.headers['set-cookie'][0] }`
+				},
+			})
+			.then((response) => {
+				t.equal(response.data.status, 'ok');
+				t.end();
+			})
+			.catch((err) => {
+				t.error(err, 'invalid csrf token');
 				t.end();
 			});
 			
