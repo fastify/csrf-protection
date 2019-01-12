@@ -53,7 +53,8 @@ fastify.get('/', (request, reply) => {
   var form = `
       <form method = "post" action="/data">
          <input type="text" name"field_name"/>
-         <input type="hidden" value="${ request.csrfToken() }" name="_csrf /* this token can be sent in request header as well */"/>
+         <input type="hidden" value="${ request.csrfToken() }" 
+	 name="_csrf /* this token can be sent in request header as well */"/>
          <button type="submit">Submit</button>
       </form>
     `;
@@ -84,14 +85,16 @@ const fastifyCSRF = require('fastify-csrf');
 
 fastify.register(fastifyCookie);
 fastify.register(fastifyFormBody);
-fastify.register(fastifySession, { cookieName: '_ses', cookie: { path: '/',secure: false },  secret: 'a secret with minimum length of 32 characters', store: new RedisStore(/* redis configurations */) });
+fastify.register(fastifySession, { cookieName: '_ses', cookie: { path: '/',secure: false },  
+secret: 'a secret with minimum length of 32 characters', store: new RedisStore(/* redis configurations */) });
 fastify.register(fastifyCSRF, { key: '_csrf', ignoreMethods: ['GET', 'HEAD', 'OPTIONS'] });
 
 fastify.get('/',(request, reply) => {
 	var form = `
 		<form method="post" action="/data">
 			<input type="text" name="user"/>
-			<input type="hidden" value ="${ request.csrfToken() }" name="_csrf /* this token can be sent in request header as well */"/>
+			<input type="hidden" value ="${ request.csrfToken() }" 
+			name="_csrf /* this token can be sent in request header as well */"/>
 			<button type="submit">Submit </buttion>
 		</form>
 	`;
@@ -119,4 +122,4 @@ Token can be sent in request header. Token is read in following order.
   - `request.headers['x-csrf-token']` - the `X-CSRF-Token` HTTP request header.
   - `request.headers['x-xsrf-token']` - the `X-XSRF-Token` HTTP request header.
   
-##Note: fastify-csrf is inspired by expressjs/csurf.
+## Note: fastify-csrf is inspired by expressjs/csurf. For any other detail please visit expessjs/csurf.
