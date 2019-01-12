@@ -7,7 +7,7 @@ Cookie based token validation.
 
 ```js
 const fastify = require('fastify');
-const fastifyCookie = require('fastify-cookie);
+const fastifyCookie = require('fastify-cookie');
 const fasifyCSRF = require('fastify-csrf');
 
 fastify.register(fastifyCookie);
