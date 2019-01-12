@@ -122,4 +122,4 @@ Token can be sent in request header. Token is read in following order.
   - `request.headers['x-csrf-token']` - the `X-CSRF-Token` HTTP request header.
   - `request.headers['x-xsrf-token']` - the `X-XSRF-Token` HTTP request header.
   
-## Note: fastify-csrf is inspired by expressjs/csurf. For any other detail please visit expessjs/csurf.
+### Note: fastify-csrf is inspired by expressjs/csurf. For any other detail please visit expessjs/csurf.
