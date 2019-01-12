@@ -25,6 +25,18 @@ Requires fastify-cookie (for cookie based CSRF token validation) or fastify-sess
   { cookie: true, ignoreMethods: ['GET', 'HEAD', /* other request type */] 
   ``` 
  ignoreMethods takes a array of request type to skip validation for particular request type.
+ Other properties related to cookie can be set normally.
+ 
+ ```js 
+  { cookie: { path: '/', maxAge: /* your maxAge value */, expires: /* cookie expiry time */ , /* other cookie properties */
+  ```
+ 
+Session based validation options
+For using session validation, skip cookie option and use other options according to you requirements.
+```js 
+ { key: 'your_secret_key_name', ignoreMethods: [/* request types */] }
+ ```
+ fastify-csrf uses fastify-session for sessions. Thus any option support by fastify-session is also valid for fastify-csrf.
 
 # Usage
 Cookie based token validation.
