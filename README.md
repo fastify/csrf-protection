@@ -44,9 +44,11 @@ Cookie based token validation.
 ```js
 const fastify = require('fastify')();
 const fastifyCookie = require('fastify-cookie');
+const fastifyFormBody = require('fastify-formbody');
 const fastifyCSRF = require('fastify-csrf');
 
 fastify.register(fastifyCookie);
+fastify.register(fastifyFormBody);
 fastify.register(fastifyCSRF, { cookie: true });
 
 fastify.get('/', (request, reply) => {
