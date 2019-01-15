@@ -42,9 +42,9 @@ For using session validation, skip cookie option and use other options according
 Cookie based token validation.
 
 ```js
-const fastify = require('fastify');
+const fastify = require('fastify')();
 const fastifyCookie = require('fastify-cookie');
-const fasifyCSRF = require('fastify-csrf');
+const fastifyCSRF = require('fastify-csrf');
 
 fastify.register(fastifyCookie);
 fastify.register(fastifyCSRF, { cookie: true });
@@ -76,7 +76,7 @@ fastify-csrf depends on fastify-cookie so require it first. Set { cookie: true }
 Session based token validation.
 
 ```js
-const fastify = require('fastify');
+const fastify = require('fastify')();
 const fastifyCookie = require('fastify-cookie');
 const fastifyFormBody = require('fastify-formbody');
 const fastifySession = require('fastify-session');
