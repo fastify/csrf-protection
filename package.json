@@ -2,7 +2,7 @@
   "name": "fastify-csrf",
   "version": "1.0.0",
   "description": "a csrf plugin for fastify",
-  "main": "index.js",
+  "main": "lib/fastifyCsrf.js",
   "scripts": {
     "test": "tap test/*.js --cov"
   },
@@ -18,7 +18,6 @@
   "homepage": "https://github.com/Tarang11/fastify-csrf#readme",
   "dependencies": {
     "csrf": "^3.0.6",
-    "fastify-formbody": "^2.0.3",
     "fastify-plugin": "^1.4.0"
   },
   "devDependencies": {
@@ -27,6 +26,7 @@
     "fastify": "^1.13.3",
     "fastify-cookie": "^2.1.5",
     "fastify-session": "^1.2.1",
+    "fastify-formbody": "^2.0.3",
     "tap": "^12.1.1"
   }
 }
