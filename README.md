@@ -69,7 +69,7 @@ fastify.listen(3000, (err) => {
   if(err) {
     process.exit(0);
    }
-}
+})
 ```
 fastify-csrf depends on fastify-cookie so require it first. Set { cookie: true } for setting a cookie defaults to '_csrf', for setting different name use { cookie: true, key: '_csrf_custom' }. Create a hidden field with name '_csrf' which will store token. 
 
