@@ -366,7 +366,6 @@ test('csrf token authentication session based ignore method(POST)', (t) => {
 	fastify.register(fastifyCsrf, { ignoreMethods: ['POST', 'GET'] });
 	
 	fastify.get('/', (request, reply) => {
-		console.log(request.csrfToken())
 		reply.send({ csrf_secret: request.csrfToken() });
 	});
 
