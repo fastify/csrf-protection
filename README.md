@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Tarang11/fastify-csrf.png?branch=master)](https://travis-ci.org/Tarang11/fastify-csrf)
+
 # fastify-csrf
 A fastify csrf plugin.
 Requires fastify-cookie (for cookie based CSRF token validation) or fastify-session (for session based)
