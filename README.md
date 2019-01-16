@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/Tarang11/fastify-csrf.png?branch=master)](https://travis-ci.org/Tarang11/fastify-csrf)
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)
 
 # fastify-csrf
 A fastify csrf plugin.
