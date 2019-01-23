@@ -6,7 +6,7 @@ A fastify csrf plugin.
 Requires fastify-cookie (for cookie based CSRF token validation) or fastify-session (for session based)
 # Install 
 ```js 
-	npm i fastify-csrf
+npm i fastify-csrf
 ```
 
 # API
