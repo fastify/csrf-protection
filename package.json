@@ -12,6 +12,13 @@
     "url": "git+https://github.com/Tarang11/fastify-csrf.git"
   },
   "author": "",
+  "contributors": [
+    {
+      "name": "Martin Jurča",
+      "email": "mjurca@centrum.cz",
+      "url": "https://github.com/jurca"
+    }
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Tarang11/fastify-csrf/issues"
