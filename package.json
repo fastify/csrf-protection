@@ -12,6 +12,13 @@
     "url": "git+https://github.com/Tarang11/fastify-csrf.git"
   },
   "author": "",
+  "contributors": [
+    {
+      "name": "Martin Jurča",
+      "email": "mjurca@centrum.cz",
+      "url": "https://github.com/jurca"
+    }
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Tarang11/fastify-csrf/issues"
@@ -25,9 +32,9 @@
     "@types/csrf": "^1.3.2",
     "axios": "^0.18.0",
     "connect-redis": "^3.4.0",
-    "fastify": "^1.13.3",
-    "fastify-cookie": "^2.1.5",
-    "fastify-formbody": "^2.0.3",
+    "fastify": "^2.12.0",
+    "fastify-cookie": "^3.6.0",
+    "fastify-formbody": "^3.1.0",
     "fastify-session": "^1.2.1",
     "tap": "^12.1.1"
   }
