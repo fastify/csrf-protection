@@ -1,19 +1,19 @@
-import * as fastify from "fastify";
-import * as fastifyCookie from "fastify-cookie";
-import * as fastifyCSRF from "../lib/fastifyCsrf";
+import * as fastify from 'fastify';
+import * as fastifyCookie from 'fastify-cookie';
+import * as fastifyCSRF from '../lib/fastifyCsrf';
 
 const server = fastify();
 server.register(fastifyCookie);
 server.register(fastifyCSRF, {
   cookie: true,
-  ignoreMethods: ["GET"],
-  key: "_custom_csrf",
+	ignoreMethods: ['GET'],
+	key: '_custom_csrf',
   value: (req) => {
-    return req.body["some_key"];
+		return req.body['some_key'];
   },
 });
 
-server.get("/", (request, reply) => {
+server.get('/', (request, reply) => {
   var form = `
       <form method = "post" action="/data">
          <input type="text" name"field_name"/>
@@ -22,5 +22,5 @@ server.get("/", (request, reply) => {
          <button type="submit">Submit</button>
       </form>
     `;
-  reply.type("text/html").send(form);
+	reply.type('text/html').send(form);
 });
