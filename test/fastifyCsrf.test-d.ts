@@ -5,20 +5,19 @@ import * as fastifyCSRF from '../lib/fastifyCsrf';
 const server = fastify();
 server.register(fastifyCookie);
 server.register(fastifyCSRF, {
-  cookie: true,
+	cookie: true,
 	ignoreMethods: ['GET'],
 	key: '_custom_csrf',
-  value: (req) => {
+	value: (req) => {
 		return req.body['some_key'];
-  },
+	},
 });
 
 server.get('/', (request, reply) => {
-  var form = `
+	var form = `
       <form method = "post" action="/data">
          <input type="text" name"field_name"/>
-         <input type="hidden" value="${request.csrfToken()}"
-	 name="_csrf /* this token can be sent in request header as well */"/>
+         <input type="hidden" value="${request.csrfToken()}" name="_csrf"/>
          <button type="submit">Submit</button>
       </form>
     `;
