@@ -5,8 +5,7 @@
   "main": "lib/fastifyCsrf.js",
   "types": "lib/fastifyCsrf.d.ts",
   "scripts": {
-    "test": "tap test/*.js --cov && npm run typescript",
-    "typescript": "tsd"
+    "test": "tap test/*.js --cov && tsd"
   },
   "repository": {
     "type": "git",
