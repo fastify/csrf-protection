@@ -5,7 +5,7 @@
   "main": "lib/fastifyCsrf.js",
   "types": "lib/fastifyCsrf.d.ts",
   "scripts": {
-    "test": "tap test/*.js --cov"
+    "test": "tap test/*.js --cov && tsd"
   },
   "repository": {
     "type": "git",
@@ -24,18 +24,23 @@
     "url": "https://github.com/Tarang11/fastify-csrf/issues"
   },
   "homepage": "https://github.com/Tarang11/fastify-csrf#readme",
+  "tsd": {
+    "directory": "./test"
+  },
   "dependencies": {
     "csrf": "^3.0.6",
     "fastify-plugin": "^1.4.0"
   },
   "devDependencies": {
     "@types/csrf": "^1.3.2",
+    "@types/node": "^14.0.14",
     "axios": "^0.18.0",
     "connect-redis": "^3.4.0",
     "fastify": "^2.12.0",
     "fastify-cookie": "^3.6.0",
     "fastify-formbody": "^3.1.0",
     "fastify-session": "^1.2.1",
-    "tap": "^12.1.1"
+    "tap": "^12.1.1",
+    "tsd": "^0.11.0"
   }
 }

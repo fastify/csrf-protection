@@ -1,37 +1,32 @@
-/// <reference types="node" />
+/// <reference types='node' />
+
+import * as http from 'http';
 import * as fastify from 'fastify';
 import { Options as TokenOptions } from 'csrf';
 import 'fastify-cookie';
 
+type HttpServer = http.Server;
+type HttpRequest = http.IncomingMessage;
+type HttpResponse = http.ServerResponse;
+
 declare module 'fastify' {
-    interface FastifyRequest<HttpRequest,
-        Query = fastify.DefaultQuery,
-        Params = fastify.DefaultParams,
-        Headers = fastify.DefaultHeaders,
-        Body = any> {
-        csrfToken(): string;
-    }
+	interface FastifyRequest {
+		csrfToken(): string;
+	}
 }
 
-declare function FastifyCsrfPlugin<
-    HttpServer = any,
-    HttpRequest = any,
-    HttpResponse = any>(opts?: FastifyCsrfPlugin.Options<HttpRequest>): FastifyCsrfPlugin.Plugin<
-    HttpServer,
-    HttpRequest,
-    HttpResponse>;
-
-declare namespace FastifyCsrfPlugin {
-    interface Options<HttpRequest> extends TokenOptions {
-        value?: (req: HttpRequest) => string;
-        cookie?: fastify.CookieSerializeOptions | boolean;
-        ignoreMethods?: string[];
-        sessionKey?: string;
-    }
-
-    interface Plugin<HttpServer, HttpRequest, HttpResponse>
-        extends fastify.Plugin<HttpServer, HttpRequest, HttpResponse, FastifyCsrfPlugin.Options<HttpRequest>> {
-    }
+interface Options extends TokenOptions {
+	key?: string;
+	value?: (req: fastify.FastifyRequest) => string;
+	cookie?: fastify.CookieSerializeOptions | boolean;
+	ignoreMethods?: string[];
 }
 
-export = FastifyCsrfPlugin;
+declare const fastifyCsrf: fastify.Plugin<
+	HttpServer,
+	HttpRequest,
+	HttpResponse,
+	Options
+>;
+
+export = fastifyCsrf;
