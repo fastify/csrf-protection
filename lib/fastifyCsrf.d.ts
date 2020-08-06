@@ -1,13 +1,9 @@
 /// <reference types='node' />
 
-import * as http from 'http';
-import * as fastify from 'fastify';
 import { Options as TokenOptions } from 'csrf';
 import 'fastify-cookie';
-
-type HttpServer = http.Server;
-type HttpRequest = http.IncomingMessage;
-type HttpResponse = http.ServerResponse;
+import { FastifyRequest, FastifyPlugin } from 'fastify';
+import { CookieSerializeOptions } from 'fastify-cookie';
 
 declare module 'fastify' {
 	interface FastifyRequest {
@@ -17,16 +13,11 @@ declare module 'fastify' {
 
 interface Options extends TokenOptions {
 	key?: string;
-	value?: (req: fastify.FastifyRequest) => string;
-	cookie?: fastify.CookieSerializeOptions | boolean;
+	value?: (req: FastifyRequest) => string;
+	cookie?: CookieSerializeOptions | boolean;
 	ignoreMethods?: string[];
 }
 
-declare const fastifyCsrf: fastify.Plugin<
-	HttpServer,
-	HttpRequest,
-	HttpResponse,
-	Options
->;
+declare const fastifyCsrf: FastifyPlugin<Options>;
 
-export = fastifyCsrf;
+export default fastifyCsrf;
