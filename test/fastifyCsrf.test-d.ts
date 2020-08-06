@@ -3,6 +3,7 @@ import fastifyCookie from 'fastify-cookie';
 import fastifyCSRF from '../lib/fastifyCsrf';
 
 const server = fastify();
+
 server.register(fastifyCookie);
 server.register(fastifyCSRF, {
     cookie: true,
