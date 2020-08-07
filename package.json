@@ -1,6 +1,6 @@
 {
   "name": "fastify-csrf",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "a csrf plugin for fastify",
   "main": "lib/fastifyCsrf.js",
   "types": "lib/fastifyCsrf.d.ts",
