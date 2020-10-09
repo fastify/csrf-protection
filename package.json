@@ -2,14 +2,14 @@
   "name": "fastify-csrf",
   "version": "1.0.4",
   "description": "a csrf plugin for fastify",
-  "main": "lib/fastifyCsrf.js",
+  "main": "index.js",
   "types": "lib/fastifyCsrf.d.ts",
   "scripts": {
-    "test": "tap test/*.js --cov && tsd"
+    "test": "standard && tap test/*.test.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Tarang11/fastify-csrf.git"
+    "url": "git+https://github.com/fastify/fastify-csrf.git"
   },
   "author": "",
   "contributors": [
@@ -19,28 +19,26 @@
       "url": "https://github.com/jurca"
     }
   ],
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Tarang11/fastify-csrf/issues"
+    "url": "https://github.com/fastify/fastify-csrf/issues"
   },
-  "homepage": "https://github.com/Tarang11/fastify-csrf#readme",
+  "homepage": "https://github.com/fastify/fastify-csrf#readme",
   "tsd": {
     "directory": "./test"
   },
   "dependencies": {
-    "csrf": "^3.0.6",
-    "fastify-plugin": "^1.4.0"
+    "csrf": "^3.1.0",
+    "fastify-plugin": "^2.3.4",
+    "http-errors": "^1.8.0"
   },
   "devDependencies": {
-    "@types/csrf": "^1.3.2",
-    "@types/node": "^14.0.14",
-    "axios": "^0.18.0",
-    "connect-redis": "^3.4.0",
-    "fastify": "^2.12.0",
-    "fastify-cookie": "^3.6.0",
-    "fastify-formbody": "^3.1.0",
-    "fastify-session": "^1.2.1",
-    "tap": "^12.1.1",
-    "tsd": "^0.11.0"
+    "fastify": "^3.5.1",
+    "fastify-cookie": "^4.1.0",
+    "fastify-secure-session": "^2.3.0",
+    "fastify-session": "^5.2.0",
+    "standard": "^14.3.4",
+    "tap": "^14.10.8",
+    "tsd": "^0.13.1"
   }
 }
