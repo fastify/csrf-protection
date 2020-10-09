@@ -4,14 +4,24 @@ const fp = require('fastify-plugin')
 const CSRF = require('csrf')
 const { Forbidden } = require('http-errors')
 
+const defaultOptions = {
+  cookieKey: '_csrf',
+  cookieOpts: { path: '/', sameSite: true },
+  sessionKey: '_csrf',
+  getToken: getTokenDefault,
+  sessionPlugin: null
+}
+
 async function csrfPlugin (fastify, opts) {
   const tokens = new CSRF()
 
-  const cookieKey = opts.cookieKey || '_csrf'
-  const cookieOpts = opts.cookieOpts || { path: '/', sameSite: true }
-  const sessionKey = opts.sessionKey || '_csrf'
-  const getToken = opts.getToken || getTokenDefault
-  const sessionPlugin = opts.sessionPlugin || null
+  const {
+    cookieKey,
+    cookieOpts,
+    sessionKey,
+    getToken,
+    sessionPlugin
+  } = Object.assign({}, defaultOptions, opts)
 
   if (sessionPlugin === 'fastify-secure-session') {
     fastify.decorateReply('generateCsrf', generateCsrfSecureSession)
