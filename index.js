@@ -1,5 +1,6 @@
 'use strict'
 
+const assert = require('assert')
 const fp = require('fastify-plugin')
 const CSRF = require('csrf')
 const { Forbidden } = require('http-errors')
@@ -9,7 +10,7 @@ const defaultOptions = {
   cookieOpts: { path: '/', sameSite: true },
   sessionKey: '_csrf',
   getToken: getTokenDefault,
-  sessionPlugin: null
+  sessionPlugin: 'fastify-cookie'
 }
 
 async function csrfPlugin (fastify, opts) {
@@ -22,6 +23,15 @@ async function csrfPlugin (fastify, opts) {
     getToken,
     sessionPlugin
   } = Object.assign({}, defaultOptions, opts)
+
+  assert(typeof cookieKey === 'string', 'cookieKey should be a string')
+  assert(typeof sessionKey === 'string', 'sessionKey should be a string')
+  assert(typeof getToken === 'function', 'getToken should be a function')
+  assert(typeof cookieOpts === 'object', 'cookieOpts should be a object')
+  assert(
+    ['fastify-cookie', 'fastify-session', 'fastify-secure-session'].includes(sessionPlugin),
+    "sessionPlugin should be one of the following: 'fastify-cookie', 'fastify-session', 'fastify-secure-session'"
+  )
 
   if (sessionPlugin === 'fastify-secure-session') {
     fastify.decorateReply('generateCsrf', generateCsrfSecureSession)
