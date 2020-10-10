@@ -28,6 +28,23 @@ test('Cookies', t => {
   t.end()
 })
 
+test('Cookies signed', t => {
+  async function load () {
+    const fastify = Fastify()
+    await fastify.register(fastifyCookie, { secret: 'supersecret' })
+    await fastify.register(fastifyCsrf, { cookieOpts: { signed: true } })
+    return fastify
+  }
+  runTest(t, load, { property: '_csrf', place: 'query' })
+  runTest(t, load, { property: '_csrf', place: 'body' }, 'preValidation')
+  runTest(t, load, { property: 'csrf-token', place: 'headers' })
+  runTest(t, load, { property: 'xsrf-token', place: 'headers' })
+  runTest(t, load, { property: 'x-csrf-token', place: 'headers' })
+  runTest(t, load, { property: 'x-xsrf-token', place: 'headers' })
+  runCookieOpts(t, load)
+  t.end()
+})
+
 test('Fastify Session', t => {
   async function load () {
     const fastify = Fastify()
