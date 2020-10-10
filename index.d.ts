@@ -4,7 +4,7 @@ import { FastifyPlugin, FastifyRequest } from 'fastify';
 
 declare module 'fastify' {
   interface FastifyInstance {
-    csrfProtection(req: any, reply: any, done: any): any;
+    csrfProtection(req: FastifyRequest, reply: FastifyReply, done: any): any;
   }
 
   interface FastifyReply {
