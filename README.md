@@ -49,6 +49,10 @@ fastify.route({
 fastify.register(require('fastify-cookie'))
 fastify.register(require('fastify-csrf'))
 
+// if you want to sign cookies:
+fastify.register(require('fastify-cookie'), { secret: 'supersecret' })
+fastify.register(require('fastify-csrf'), { cookieOpts: { signed: true } })
+
 // generate a token
 fastify.route({
   method: 'GET',
