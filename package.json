@@ -3,9 +3,9 @@
   "version": "1.0.4",
   "description": "a csrf plugin for fastify",
   "main": "index.js",
-  "types": "lib/fastifyCsrf.d.ts",
+  "types": "index.d.ts",
   "scripts": {
-    "test": "standard && tap test/*.test.js"
+    "test": "standard && tap test/*.test.js && tsd"
   },
   "repository": {
     "type": "git",
