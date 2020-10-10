@@ -21,7 +21,7 @@ async function csrfPlugin (fastify, opts) {
     cookieOpts,
     sessionKey,
     getToken,
-    sessionPlugin,
+    sessionPlugin
   } = Object.assign({}, defaultOptions, opts)
 
   assert(typeof cookieKey === 'string', 'cookieKey should be a string')
