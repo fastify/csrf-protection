@@ -21,7 +21,7 @@ async function csrfPlugin (fastify, opts) {
     cookieOpts,
     sessionKey,
     getToken,
-    sessionPlugin
+    sessionPlugin,
   } = Object.assign({}, defaultOptions, opts)
 
   assert(typeof cookieKey === 'string', 'cookieKey should be a string')
@@ -32,6 +32,8 @@ async function csrfPlugin (fastify, opts) {
     ['fastify-cookie', 'fastify-session', 'fastify-secure-session'].includes(sessionPlugin),
     "sessionPlugin should be one of the following: 'fastify-cookie', 'fastify-session', 'fastify-secure-session'"
   )
+
+  const isCookieSigned = cookieOpts && cookieOpts.signed
 
   if (sessionPlugin === 'fastify-secure-session') {
     fastify.decorateReply('generateCsrf', generateCsrfSecureSession)
@@ -77,7 +79,7 @@ async function csrfPlugin (fastify, opts) {
   }
 
   function csrfProtection (req, reply, next) {
-    const secret = getSecret(req)
+    const secret = getSecret(req, reply)
     if (!secret) {
       req.log.warn('Missing csrf secret')
       return reply.send(new Forbidden('Missing csrf secret'))
@@ -89,13 +91,15 @@ async function csrfPlugin (fastify, opts) {
     next()
   }
 
-  function getSecret (req) {
+  function getSecret (req, reply) {
     if (sessionPlugin === 'fastify-secure-session') {
       return req.session.get(sessionKey)
     } else if (sessionPlugin === 'fastify-session') {
       return req.session[sessionKey]
     } else {
-      return req.cookies[cookieKey]
+      return isCookieSigned
+        ? reply.unsignCookie(req.cookies[cookieKey] || '')
+        : req.cookies[cookieKey]
     }
   }
 }
