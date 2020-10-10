@@ -46,7 +46,9 @@ async function csrfPlugin (fastify, opts) {
   fastify.decorate('csrfProtection', csrfProtection)
 
   async function generateCsrfCookie (opts) {
-    let secret = this.request.cookies[cookieKey]
+    let secret = isCookieSigned
+      ? this.unsignCookie(this.request.cookies[cookieKey] || '')
+      : this.request.cookies[cookieKey]
     /* istanbul ignore else */
     if (!secret) {
       secret = await tokens.secret()
