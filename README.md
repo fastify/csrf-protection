@@ -1,134 +1,167 @@
-[![Build Status](https://travis-ci.org/Tarang11/fastify-csrf.png?branch=master)](https://travis-ci.org/Tarang11/fastify-csrf)
+# fastify-csrf
+
+![Node.js CI](https://github.com/fastify/fastify-csrf/workflows/Node.js%20CI/badge.svg)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)
 
-# fastify-csrf
-A fastify csrf plugin.
-Requires fastify-cookie (for cookie based CSRF token validation) or fastify-session (for session based)
+A plugin for adding [CSRF](https://en.wikipedia.org/wiki/Cross-site_request_forgery) protection to Fastify.  
+If you want to learn more about CSRF, see [pillarjs/understanding-csrf](https://github.com/pillarjs/understanding-csrf).
+
 # Install 
 ```js 
 npm i fastify-csrf
 ```
 
-# API
- ## csrf(fastify, options, next)
- csrf will decorate request with a csrfToken(). It will generate token for validating request.
- 
- ### options 
- #### cookie
- cookie set to true will use cookie for storing _csrf secret in browser cookie.
- ```js 
-  { cookie: true } 
- ```
+## Usage
 
- #### key 
- ```js 
-  { cookie: true, key: '_csrf_custom' }
- ```
- this will set cookie with a name _csrf_custom.
- 
- #### ignoreMethods 
- 
- ```js 
-  { cookie: true, ignoreMethods: ['GET', 'HEAD', /* other request type */] }
-  ``` 
- ignoreMethods takes a array of request type to skip validation for particular request type.
- Other properties related to cookie can be set normally.
- 
- ```js 
-  { cookie: { path: '/', maxAge: /* your maxAge value */, expires: /* cookie expiry time */ ,/* other cookie properties */}}
-  ```
- 
-Session based validation options
-For using session validation, skip cookie option and use other options according to your requirement.
-```js 
- { key: 'your_secret_key_name', ignoreMethods: [/* request types */] }
- ```
- fastify-csrf uses fastify-session for sessions. Thus any option support by fastify-session is also valid for fastify-csrf.
+This plugins adds two new method to your code:
 
-# Usage
-Cookie based token validation.
+### `reply.generateCsrf([opts])`
+
+Generates a secret (if is not already present) and returns a promise that resoves to the associated secret.
 
 ```js
-const fastify = require('fastify')();
-const fastifyCookie = require('fastify-cookie');
-const fastifyFormBody = require('fastify-formbody');
-const fastifyCSRF = require('fastify-csrf');
+const token = await reply.generateCsrf()
+```
 
-fastify.register(fastifyCookie);
-fastify.register(fastifyFormBody);
-fastify.register(fastifyCSRF, { cookie: true });
+You can also pass the [cookie serialization](https://github.com/fastify/fastify-cookie) options to the function.
 
-fastify.get('/', (request, reply) => {
-  var form = `
-      <form method = "post" action="/data">
-         <input type="text" name"field_name"/>
-         <input type="hidden" value="${ request.csrfToken() }" 
-	 name="_csrf /* this token can be sent in request header as well */"/>
-         <button type="submit">Submit</button>
-      </form>
-    `;
-   reply.type('text/html').send(form);
-});
+### `fastify.csrfProtection(request, reply, next)`
 
-fastify.post('/data', (request, reply) => {
-  reply.send('Post successful');
-});
+A hook that you can use for protecting routes or enitre plugins from CSRF attacks.
+Generally, we recommend to use the `onRequest` hook, but if you are sending the token
+via the body, then you should use `preValidation` or `preHandler`.
 
-fastify.listen(3000, (err) => {
-  if(err) {
-    process.exit(0);
-   }
+```js
+// protect the entire plugin
+fastify.addHook('onRequest', fastify.csrfProtection)
+
+// protect a single route
+fastify.route({
+  method: 'POST',
+  path: '/',
+  onRequest: fastify.csrfProtection
+  handler: async (req, reply) => {
+    return req.body
+  }
 })
 ```
-fastify-csrf depends on fastify-cookie so require it first. Set { cookie: true } for setting a cookie defaults to '_csrf', for setting different name use { cookie: true, key: '_csrf_custom' }. Create a hidden field with name '_csrf' which will store token. 
 
-Session based token validation.
+You can configure the function to read the CSRF token via the `getToken` option, by default the following is used:
 
 ```js
-const fastify = require('fastify')();
-const fastifyCookie = require('fastify-cookie');
-const fastifyFormBody = require('fastify-formbody');
-const fastifySession = require('fastify-session');
-const RedisStore = require('connect-redis')(fastifySession);
-const fastifyCSRF = require('fastify-csrf');
-
-fastify.register(fastifyCookie);
-fastify.register(fastifyFormBody);
-fastify.register(fastifySession, { cookieName: '_ses', cookie: { path: '/',secure: false },  
-secret: 'a secret with minimum length of 32 characters', store: new RedisStore(/* redis configurations */) });
-fastify.register(fastifyCSRF, { key: '_csrf', ignoreMethods: ['GET', 'HEAD', 'OPTIONS'] });
-
-fastify.get('/',(request, reply) => {
-	var form = `
-		<form method="post" action="/data">
-			<input type="text" name="user"/>
-			<input type="hidden" value ="${ request.csrfToken() }" 
-			name="_csrf /* this token can be sent in request header as well */"/>
-			<button type="submit">Submit </buttion>
-		</form>
-	`;
-	reply.type('text/html').send(form);
-});
-
-fastify.post('/data',(request, reply) => {
- reply.send('Post successful');
-});
-
-fastify.listen(3000,(err) => {
-	if(err) {
-		process.exit(0);
-	}
-});
+function getToken (req) {
+  return (req.body && req.body._csrf) ||
+    (req.query && req.query._csrf) ||
+    req.headers['csrf-token'] ||
+    req.headers['xsrf-token'] ||
+    req.headers['x-csrf-token'] ||
+    req.headers['x-xsrf-token']
+}
 ```
 
-fastify-csrf will use redis to store csrf token with a name given in key (in this case its, _csrf, custom name can be given).
+### Use with [`fastify-cookie`](https://github.com/fastify/fastify-cookie)
 
-Token can be sent in request header. Token is read in following order.
-  - `request.body._csrf` - will read from request body.
-  - `request.query._csrf` - to read from the URL query string.
-  - `request.headers['csrf-token']` - the `CSRF-Token` HTTP request header.
-  - `request.headers['xsrf-token']` - the `XSRF-Token` HTTP request header.
-  - `request.headers['x-csrf-token']` - the `X-CSRF-Token` HTTP request header.
-  - `request.headers['x-xsrf-token']` - the `X-XSRF-Token` HTTP request header.
-  
-#### Note: fastify-csrf is inspired by expressjs/csurf. For any other detail please visit expessjs/csurf.
+If you use `fastify-csrf` with `fastify-cookie`, the CSRF secret will be added to the response cookies.
+By default, the cookie used will be named `_csrf`, but you can rename it via the `cookieKey` option.
+
+```js
+fastify.register(require('fastify-cookie'))
+fastify.register(require('fastify-csrf'))
+
+// if you want to sign cookies:
+fastify.register(require('fastify-cookie'), { secret: 'supersecret' })
+fastify.register(require('fastify-csrf'), { cookieOpts: { signed: true } })
+
+// generate a token
+fastify.route({
+  method: 'GET',
+  path: '/',
+  handler: async (req, reply) => {
+    const token = await reply.generateCsrf()
+    return { token }
+  }
+})
+
+// protect a route
+fastify.route({
+  method: 'POST',
+  path: '/',
+  onRequest: fastify.csrfProtection
+  handler: async (req, reply) => {
+    return req.body
+  }
+})
+```
+
+### Use with [`fastify-session`](https://github.com/SerayaEryn/fastify-session)
+
+If you use `fastify-csrf` with `fastify-session`, the CSRF secret will be added to the session.
+By default, the key used will be named `_csrf`, but you can rename it via the `sessionKey` option.
+
+```js
+fastify.register(require('fastify-session'))
+fastify.register(require('fastify-csrf'), { sessionPlugin: 'fastify-session' })
+
+// generate a token
+fastify.route({
+  method: 'GET',
+  path: '/',
+  handler: async (req, reply) => {
+    const token = await reply.generateCsrf()
+    return { token }
+  }
+})
+
+// protect a route
+fastify.route({
+  method: 'POST',
+  path: '/',
+  onRequest: fastify.csrfProtection
+  handler: async (req, reply) => {
+    return req.body
+  }
+})
+```
+
+### Use with [`fastify-secure-session`](https://github.com/fastify/fastify-secure-session)
+
+If you use `fastify-csrf` with `fastify-secure-session`, the CSRF secret will be added to the session.
+By default, the key used will be named `_csrf`, but you can rename it via the `sessionKey` option.
+
+```js
+fastify.register(require('fastify-secure-session'))
+fastify.register(require('fastify-csrf'), { sessionPlugin: 'fastify-secure-session' })
+
+// generate a token
+fastify.route({
+  method: 'GET',
+  path: '/',
+  handler: async (req, reply) => {
+    const token = await reply.generateCsrf()
+    return { token }
+  }
+})
+
+// protect a route
+fastify.route({
+  method: 'POST',
+  path: '/',
+  onRequest: fastify.csrfProtection
+  handler: async (req, reply) => {
+    return req.body
+  }
+})
+```
+
+### Options
+| Options      | Description |
+| ----------- | ----------- |
+| `cookieKey` |  The name of the cookie where the CSRF secret will be stored, default `_csrf`.     |
+| `cookieOpts` |  The cookie serialization options. See [fastify-cookie](https://github.com/fastify/fastify-cookie).    |
+| `sessionKey` |  The key where to store the CSRF secret in the session     |
+| `getToken` |  A sync function to get the CSRF secret from the request     |
+| `sessionPlugin` |  The session plugin that you are using (if applicable)     |
+
+
+## License
+[MIT](./LICENSE)
