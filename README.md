@@ -26,7 +26,7 @@ const token = await reply.generateCsrf()
 
 A hook that you can use for protecting routes or enitre plugins from CSRF attacks.
 Generally, we recommend to use the `onRequest` hook, but if you are sending the token
-via the body, then you should use `preValidation`.
+via the body, then you should use `preValidation` or `preHandler`.
 
 ```js
 // protect the entire plugin
