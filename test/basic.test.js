@@ -16,6 +16,7 @@ test('Cookies', t => {
     const fastify = Fastify()
     await fastify.register(fastifyCookie)
     await fastify.register(fastifyCsrf)
+    fastify.decorate('testType', 'fastify-cookie')
     return fastify
   }
   runTest(t, load, { property: '_csrf', place: 'query' })
@@ -33,6 +34,7 @@ test('Cookies signed', t => {
     const fastify = Fastify()
     await fastify.register(fastifyCookie, { secret: 'supersecret' })
     await fastify.register(fastifyCsrf, { cookieOpts: { signed: true } })
+    fastify.decorate('testType', 'fastify-cookie')
     return fastify
   }
   runTest(t, load, { property: '_csrf', place: 'query' })
@@ -54,6 +56,7 @@ test('Fastify Session', t => {
       cookie: { path: '/', secure: false }
     })
     await fastify.register(fastifyCsrf, { sessionPlugin: 'fastify-session' })
+    fastify.decorate('testType', 'fastify-session')
     return fastify
   }
   runTest(t, load, { property: '_csrf', place: 'query' }, 'preValidation')
@@ -70,6 +73,7 @@ test('Fastify Secure Session', t => {
     const fastify = Fastify()
     await fastify.register(fastifySecureSession, { key, cookie: { path: '/', secure: false } })
     await fastify.register(fastifyCsrf, { sessionPlugin: 'fastify-secure-session' })
+    fastify.decorate('testType', 'fastify-secure-session')
     return fastify
   }
   runTest(t, load, { property: '_csrf', place: 'query' })
@@ -156,7 +160,26 @@ function runTest (t, load, tkn, hook = 'onRequest') {
 
     t.strictEqual(response.statusCode, 200)
     const cookie = response.cookies[0]
+    const tokenFirst = response.json().token
+
+    response = await fastify.inject({
+      method: 'GET',
+      path: '/',
+      cookies: {
+        [cookie.name]: cookie.value
+      }
+    })
+
+    t.strictEqual(response.statusCode, 200)
+    const cookieSecond = response.cookies[0]
     const token = response.json().token
+
+    if (fastify.testType === 'fastify-session') {
+      t.deepEqual(cookie, cookieSecond)
+    } else {
+      t.strictEqual(cookieSecond, undefined)
+    }
+    t.notStrictEqual(tokenFirst, token)
 
     if (tkn.place === 'query') {
       response = await fastify.inject({

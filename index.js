@@ -49,7 +49,6 @@ async function csrfPlugin (fastify, opts) {
     let secret = isCookieSigned
       ? this.unsignCookie(this.request.cookies[cookieKey] || '')
       : this.request.cookies[cookieKey]
-    /* istanbul ignore else */
     if (!secret) {
       secret = await tokens.secret()
       this.setCookie(cookieKey, secret, Object.assign({}, cookieOpts, opts))
@@ -59,7 +58,6 @@ async function csrfPlugin (fastify, opts) {
 
   async function generateCsrfSecureSession (opts) {
     let secret = this.request.session.get(sessionKey)
-    /* istanbul ignore else */
     if (!secret) {
       secret = await tokens.secret()
       this.request.session.set(sessionKey, secret)
@@ -72,7 +70,6 @@ async function csrfPlugin (fastify, opts) {
 
   async function generateCsrfSession () {
     let secret = this.request.session[sessionKey]
-    /* istanbul ignore else */
     if (!secret) {
       secret = await tokens.secret()
       this.request.session[sessionKey] = secret
