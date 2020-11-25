@@ -38,7 +38,7 @@
     "fastify-cookie": "^4.1.0",
     "fastify-secure-session": "^2.3.0",
     "fastify-session": "^5.2.0",
-    "standard": "^14.3.4",
+    "standard": "^16.0.3",
     "tap": "^14.10.8",
     "tsd": "^0.13.1"
   }
