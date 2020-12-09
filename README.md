@@ -4,7 +4,9 @@
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)
 
 A plugin for adding [CSRF](https://en.wikipedia.org/wiki/Cross-site_request_forgery) protection to Fastify.  
-If you want to learn more about CSRF, see [pillarjs/understanding-csrf](https://github.com/pillarjs/understanding-csrf).
+If you want to learn more about CSRF, see [pillarjs/understanding-csrf](https://github.com/pillarjs/understanding-csrf) and [Cross-Site Request Forgery Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
+
+> CSRF prevention must always be accompanied by other security measures. We recommend using [fastify-helmet](https://github.com/fastify/fastify-helmet)
 
 # Install 
 ```js 
@@ -154,6 +156,7 @@ fastify.route({
 ```
 
 ### Options
+
 | Options      | Description |
 | ----------- | ----------- |
 | `cookieKey` |  The name of the cookie where the CSRF secret will be stored, default `_csrf`.     |
@@ -164,4 +167,5 @@ fastify.route({
 
 
 ## License
+
 [MIT](./LICENSE)
