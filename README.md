@@ -64,6 +64,7 @@ function getToken (req) {
 
 If you use `fastify-csrf` with `fastify-cookie`, the CSRF secret will be added to the response cookies.
 By default, the cookie used will be named `_csrf`, but you can rename it via the `cookieKey` option.
+When `cookieOpts` are provided, they **override** the default options. Make sure you restore any of the default options which provide sensible and secure defaults.
 
 ```js
 fastify.register(require('fastify-cookie'))

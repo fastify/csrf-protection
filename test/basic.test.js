@@ -27,6 +27,24 @@ test('Cookies', t => {
   runTest(t, load, { property: 'x-csrf-token', place: 'headers' })
   runTest(t, load, { property: 'x-xsrf-token', place: 'headers' })
   runCookieOpts(t, load)
+
+  t.test('Default cookie options', async t => {
+    const fastify = await load()
+
+    fastify.get('/', async (req, reply) => {
+      const token = await reply.generateCsrf()
+      return { token }
+    })
+
+    const response = await fastify.inject({
+      method: 'GET',
+      path: '/'
+    })
+
+    const cookie = response.cookies[0]
+    t.match(cookie, { path: '/', sameSite: 'Strict', httpOnly: true })
+  })
+
   t.end()
 })
 

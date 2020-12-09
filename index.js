@@ -7,7 +7,7 @@ const { Forbidden } = require('http-errors')
 
 const defaultOptions = {
   cookieKey: '_csrf',
-  cookieOpts: { path: '/', sameSite: true },
+  cookieOpts: { path: '/', sameSite: true, httpOnly: true },
   sessionKey: '_csrf',
   getToken: getTokenDefault,
   sessionPlugin: 'fastify-cookie'
