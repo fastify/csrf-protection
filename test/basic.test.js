@@ -21,7 +21,6 @@ test('Cookies', t => {
     fastify.decorate('testType', 'fastify-cookie')
     return fastify
   }
-  runTest(t, load, { property: '_csrf', place: 'query' })
   runTest(t, load, { property: '_csrf', place: 'body' }, 'preValidation')
   runTest(t, load, { property: 'csrf-token', place: 'headers' })
   runTest(t, load, { property: 'xsrf-token', place: 'headers' })
@@ -39,7 +38,6 @@ test('Cookies signed', t => {
     fastify.decorate('testType', 'fastify-cookie')
     return fastify
   }
-  runTest(t, load, { property: '_csrf', place: 'query' })
   runTest(t, load, { property: '_csrf', place: 'body' }, 'preValidation')
   runTest(t, load, { property: 'csrf-token', place: 'headers' })
   runTest(t, load, { property: 'xsrf-token', place: 'headers' })
@@ -61,7 +59,6 @@ test('Fastify Session', t => {
     fastify.decorate('testType', 'fastify-session')
     return fastify
   }
-  runTest(t, load, { property: '_csrf', place: 'query' }, 'preValidation')
   runTest(t, load, { property: '_csrf', place: 'body' }, 'preValidation')
   runTest(t, load, { property: 'csrf-token', place: 'headers' }, 'preValidation')
   runTest(t, load, { property: 'xsrf-token', place: 'headers' }, 'preValidation')
@@ -78,7 +75,6 @@ test('Fastify Secure Session', t => {
     fastify.decorate('testType', 'fastify-secure-session')
     return fastify
   }
-  runTest(t, load, { property: '_csrf', place: 'query' })
   runTest(t, load, { property: '_csrf', place: 'body' }, 'preValidation')
   runTest(t, load, { property: 'csrf-token', place: 'headers' })
   runTest(t, load, { property: 'xsrf-token', place: 'headers' })
@@ -201,16 +197,7 @@ function runTest (t, load, tkn, hook = 'onRequest') {
     }
     t.notStrictEqual(tokenFirst, token)
 
-    if (tkn.place === 'query') {
-      response = await fastify.inject({
-        method: 'POST',
-        path: `/?${tkn.property}=${token}`,
-        payload: { hello: 'world' },
-        cookies: {
-          [cookie.name]: cookie.value
-        }
-      })
-    } else if (tkn.place === 'body') {
+    if (tkn.place === 'body') {
       response = await fastify.inject({
         method: 'POST',
         path: '/',
