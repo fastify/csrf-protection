@@ -161,9 +161,10 @@ fastify.route({
 | ----------- | ----------- |
 | `cookieKey` |  The name of the cookie where the CSRF secret will be stored, default `_csrf`.     |
 | `cookieOpts` |  The cookie serialization options. See [fastify-cookie](https://github.com/fastify/fastify-cookie).    |
-| `sessionKey` |  The key where to store the CSRF secret in the session     |
-| `getToken` |  A sync function to get the CSRF secret from the request     |
-| `sessionPlugin` |  The session plugin that you are using (if applicable)     |
+| `sessionKey` |  The key where to store the CSRF secret in the session.     |
+| `getToken` |  A sync function to get the CSRF secret from the request.     |
+| `sessionPlugin` |  The session plugin that you are using (if applicable).     |
+| `csrfOpts` |  The csrf options. See  [csrf](https://github.com/pillarjs/csrf).     |
 
 
 ## License
