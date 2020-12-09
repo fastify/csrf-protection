@@ -14,14 +14,13 @@ const defaultOptions = {
 }
 
 async function csrfPlugin (fastify, opts) {
-  const tokens = new CSRF()
-
   const {
     cookieKey,
     cookieOpts,
     sessionKey,
     getToken,
-    sessionPlugin
+    sessionPlugin,
+    csrfOpts
   } = Object.assign({}, defaultOptions, opts)
 
   assert(typeof cookieKey === 'string', 'cookieKey should be a string')
@@ -32,6 +31,8 @@ async function csrfPlugin (fastify, opts) {
     ['fastify-cookie', 'fastify-session', 'fastify-secure-session'].includes(sessionPlugin),
     "sessionPlugin should be one of the following: 'fastify-cookie', 'fastify-session', 'fastify-secure-session'"
   )
+
+  const tokens = new CSRF(csrfOpts)
 
   const isCookieSigned = cookieOpts && cookieOpts.signed
 

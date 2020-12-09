@@ -5,7 +5,9 @@ const Fastify = require('fastify')
 const fastifyCookie = require('fastify-cookie')
 const fastifySession = require('fastify-session')
 const fastifySecureSession = require('fastify-secure-session')
-const fastifyCsrf = require('../index')
+const proxyquire = require('proxyquire')
+const sinon = require('sinon')
+const fastifyCsrf = require('../')
 
 const sodium = require('sodium-native')
 const key = Buffer.alloc(sodium.crypto_secretbox_KEYBYTES)
@@ -138,6 +140,24 @@ test('Validation', t => {
   })
 
   t.end()
+})
+
+test('csrf options', async () => {
+  const csrf = sinon.stub()
+
+  const fastifyCsrf = proxyquire('../', {
+    csrf: function (...args) {
+      return csrf(...args)
+    }
+  })
+
+  const csrfOpts = { some: 'options' }
+
+  await Fastify()
+    .register(fastifyCookie)
+    .register(fastifyCsrf, { csrfOpts })
+
+  sinon.assert.calledWith(csrf, csrfOpts)
 })
 
 function runTest (t, load, tkn, hook = 'onRequest') {
