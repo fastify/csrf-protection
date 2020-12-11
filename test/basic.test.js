@@ -5,7 +5,9 @@ const Fastify = require('fastify')
 const fastifyCookie = require('fastify-cookie')
 const fastifySession = require('fastify-session')
 const fastifySecureSession = require('fastify-secure-session')
-const fastifyCsrf = require('../index')
+const proxyquire = require('proxyquire')
+const sinon = require('sinon')
+const fastifyCsrf = require('../')
 
 const sodium = require('sodium-native')
 const key = Buffer.alloc(sodium.crypto_secretbox_KEYBYTES)
@@ -19,13 +21,30 @@ test('Cookies', t => {
     fastify.decorate('testType', 'fastify-cookie')
     return fastify
   }
-  runTest(t, load, { property: '_csrf', place: 'query' })
   runTest(t, load, { property: '_csrf', place: 'body' }, 'preValidation')
   runTest(t, load, { property: 'csrf-token', place: 'headers' })
   runTest(t, load, { property: 'xsrf-token', place: 'headers' })
   runTest(t, load, { property: 'x-csrf-token', place: 'headers' })
   runTest(t, load, { property: 'x-xsrf-token', place: 'headers' })
   runCookieOpts(t, load)
+
+  t.test('Default cookie options', async t => {
+    const fastify = await load()
+
+    fastify.get('/', async (req, reply) => {
+      const token = await reply.generateCsrf()
+      return { token }
+    })
+
+    const response = await fastify.inject({
+      method: 'GET',
+      path: '/'
+    })
+
+    const cookie = response.cookies[0]
+    t.match(cookie, { path: '/', sameSite: 'Strict', httpOnly: true })
+  })
+
   t.end()
 })
 
@@ -37,7 +56,6 @@ test('Cookies signed', t => {
     fastify.decorate('testType', 'fastify-cookie')
     return fastify
   }
-  runTest(t, load, { property: '_csrf', place: 'query' })
   runTest(t, load, { property: '_csrf', place: 'body' }, 'preValidation')
   runTest(t, load, { property: 'csrf-token', place: 'headers' })
   runTest(t, load, { property: 'xsrf-token', place: 'headers' })
@@ -59,7 +77,6 @@ test('Fastify Session', t => {
     fastify.decorate('testType', 'fastify-session')
     return fastify
   }
-  runTest(t, load, { property: '_csrf', place: 'query' }, 'preValidation')
   runTest(t, load, { property: '_csrf', place: 'body' }, 'preValidation')
   runTest(t, load, { property: 'csrf-token', place: 'headers' }, 'preValidation')
   runTest(t, load, { property: 'xsrf-token', place: 'headers' }, 'preValidation')
@@ -76,7 +93,6 @@ test('Fastify Secure Session', t => {
     fastify.decorate('testType', 'fastify-secure-session')
     return fastify
   }
-  runTest(t, load, { property: '_csrf', place: 'query' })
   runTest(t, load, { property: '_csrf', place: 'body' }, 'preValidation')
   runTest(t, load, { property: 'csrf-token', place: 'headers' })
   runTest(t, load, { property: 'xsrf-token', place: 'headers' })
@@ -140,6 +156,24 @@ test('Validation', t => {
   t.end()
 })
 
+test('csrf options', async () => {
+  const csrf = sinon.stub()
+
+  const fastifyCsrf = proxyquire('../', {
+    csrf: function (...args) {
+      return csrf(...args)
+    }
+  })
+
+  const csrfOpts = { some: 'options' }
+
+  await Fastify()
+    .register(fastifyCookie)
+    .register(fastifyCsrf, { csrfOpts })
+
+  sinon.assert.calledWith(csrf, csrfOpts)
+})
+
 function runTest (t, load, tkn, hook = 'onRequest') {
   t.test(`Token in ${tkn.place}`, async t => {
     const fastify = await load()
@@ -181,16 +215,7 @@ function runTest (t, load, tkn, hook = 'onRequest') {
     }
     t.notStrictEqual(tokenFirst, token)
 
-    if (tkn.place === 'query') {
-      response = await fastify.inject({
-        method: 'POST',
-        path: `/?${tkn.property}=${token}`,
-        payload: { hello: 'world' },
-        cookies: {
-          [cookie.name]: cookie.value
-        }
-      })
-    } else if (tkn.place === 'body') {
+    if (tkn.place === 'body') {
       response = await fastify.inject({
         method: 'POST',
         path: '/',

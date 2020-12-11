@@ -7,21 +7,20 @@ const { Forbidden } = require('http-errors')
 
 const defaultOptions = {
   cookieKey: '_csrf',
-  cookieOpts: { path: '/', sameSite: true },
+  cookieOpts: { path: '/', sameSite: true, httpOnly: true },
   sessionKey: '_csrf',
   getToken: getTokenDefault,
   sessionPlugin: 'fastify-cookie'
 }
 
 async function csrfPlugin (fastify, opts) {
-  const tokens = new CSRF()
-
   const {
     cookieKey,
     cookieOpts,
     sessionKey,
     getToken,
-    sessionPlugin
+    sessionPlugin,
+    csrfOpts
   } = Object.assign({}, defaultOptions, opts)
 
   assert(typeof cookieKey === 'string', 'cookieKey should be a string')
@@ -32,6 +31,8 @@ async function csrfPlugin (fastify, opts) {
     ['fastify-cookie', 'fastify-session', 'fastify-secure-session'].includes(sessionPlugin),
     "sessionPlugin should be one of the following: 'fastify-cookie', 'fastify-session', 'fastify-secure-session'"
   )
+
+  const tokens = new CSRF(csrfOpts)
 
   const isCookieSigned = cookieOpts && cookieOpts.signed
 
@@ -105,7 +106,6 @@ async function csrfPlugin (fastify, opts) {
 
 function getTokenDefault (req) {
   return (req.body && req.body._csrf) ||
-    (req.query && req.query._csrf) ||
     req.headers['csrf-token'] ||
     req.headers['xsrf-token'] ||
     req.headers['x-csrf-token'] ||
