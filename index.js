@@ -48,7 +48,7 @@ async function csrfPlugin (fastify, opts) {
 
   async function generateCsrfCookie (opts) {
     let secret = isCookieSigned
-      ? this.unsignCookie(this.request.cookies[cookieKey] || '')
+      ? this.unsignCookie(this.request.cookies[cookieKey] || '').value
       : this.request.cookies[cookieKey]
     if (!secret) {
       secret = await tokens.secret()
@@ -98,7 +98,7 @@ async function csrfPlugin (fastify, opts) {
       return req.session[sessionKey]
     } else {
       return isCookieSigned
-        ? reply.unsignCookie(req.cookies[cookieKey] || '')
+        ? reply.unsignCookie(req.cookies[cookieKey] || '').value
         : req.cookies[cookieKey]
     }
   }
