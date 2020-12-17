@@ -3,13 +3,13 @@
 ![Node.js CI](https://github.com/fastify/fastify-csrf/workflows/Node.js%20CI/badge.svg)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)
 
-A plugin for adding [CSRF](https://en.wikipedia.org/wiki/Cross-site_request_forgery) protection to Fastify.  
+A plugin for adding [CSRF](https://en.wikipedia.org/wiki/Cross-site_request_forgery) protection to Fastify.
 If you want to learn more about CSRF, see [pillarjs/understanding-csrf](https://github.com/pillarjs/understanding-csrf) and [Cross-Site Request Forgery Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
 
 > CSRF prevention must always be accompanied by other security measures. We recommend using [fastify-helmet](https://github.com/fastify/fastify-helmet)
 
-# Install 
-```js 
+# Install
+```js
 npm i fastify-csrf
 ```
 
@@ -19,7 +19,7 @@ This plugins adds two new method to your code:
 
 ### `reply.generateCsrf([opts])`
 
-Generates a secret (if is not already present) and returns a promise that resoves to the associated secret.
+Generates a secret (if is not already present) and returns a promise that resolves to the associated secret.
 
 ```js
 const token = await reply.generateCsrf()
@@ -71,7 +71,7 @@ fastify.register(require('fastify-cookie'))
 fastify.register(require('fastify-csrf'))
 
 // if you want to sign cookies:
-fastify.register(require('fastify-cookie'), { secret: 'supersecret' })
+fastify.register(require('fastify-cookie'), { secret: 'supersecret' }) // See following section to ensure security
 fastify.register(require('fastify-csrf'), { cookieOpts: { signed: true } })
 
 // generate a token
@@ -166,6 +166,15 @@ fastify.route({
 | `sessionPlugin` |  The session plugin that you are using (if applicable).     |
 | `csrfOpts` |  The csrf options. See  [csrf](https://github.com/pillarjs/csrf).     |
 
+
+## Securing the secret
+
+The `secret` shown in above code is strictly just a sample. In all cases, you'd need to make sure that the `secret` is:
+- **Never** hard-coded in the code or `.env` files or anywhere in the repository
+- Stored in some external services like KMS, Vault or something similar
+- Read at run-time and supplied in this option
+- Long enough
+- Truly random sequence of characters
 
 ## License
 
