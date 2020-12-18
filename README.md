@@ -174,9 +174,9 @@ The `secret` shown in above code is strictly just a sample. In all cases, you'd 
 - Stored in some external services like KMS, Vault or something similar
 - Read at run-time and supplied in this option
 - Long enough
-- Truly random sequence of characters (You could use [hyperid](http://npm.im/hyperid) or [crypto-random-string](http://npm.im/crypto-random-string))
+- Truly random sequence of characters (You could use [crypto-random-string](http://npm.im/crypto-random-string))
 
-Apart from these safeguards, it's extremely important to use HTTPS for your website/app to avoid a bunch of other potential security issues like [MITM](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) etc.
+Apart from these safeguards, it's extremely important to [use HTTPS for your website/app](https://letsencrypt.org/) to avoid a bunch of other potential security issues like [MITM](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) etc.
 
 ## License
 
