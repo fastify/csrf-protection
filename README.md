@@ -176,6 +176,8 @@ The `secret` shown in above code is strictly just a sample. In all cases, you'd 
 - Long enough
 - Truly random sequence of characters
 
+Apart from these safeguards, it's extremely important to use HTTPS for your website/app to avoid a bunch of other potential security issues like [MITM](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) etc.
+
 ## License
 
 [MIT](./LICENSE)
