@@ -71,7 +71,7 @@ fastify.register(require('fastify-cookie'))
 fastify.register(require('fastify-csrf'))
 
 // if you want to sign cookies:
-fastify.register(require('fastify-cookie'), { secret: 'supersecret' }) // See following section to ensure security
+fastify.register(require('fastify-cookie'), { secret }) // See following section to ensure security
 fastify.register(require('fastify-csrf'), { cookieOpts: { signed: true } })
 
 // generate a token
@@ -174,7 +174,7 @@ The `secret` shown in above code is strictly just a sample. In all cases, you'd 
 - Stored in some external services like KMS, Vault or something similar
 - Read at run-time and supplied in this option
 - Long enough
-- Truly random sequence of characters
+- Truly random sequence of characters (You could use [hyperid](http://npm.im/hyperid) or [crypto-random-string](http://npm.im/crypto-random-string))
 
 Apart from these safeguards, it's extremely important to use HTTPS for your website/app to avoid a bunch of other potential security issues like [MITM](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) etc.
 
