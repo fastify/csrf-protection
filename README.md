@@ -41,7 +41,7 @@ fastify.addHook('onRequest', fastify.csrfProtection)
 fastify.route({
   method: 'POST',
   path: '/',
-  onRequest: fastify.csrfProtection
+  onRequest: fastify.csrfProtection,
   handler: async (req, reply) => {
     return req.body
   }
@@ -88,7 +88,7 @@ fastify.route({
 fastify.route({
   method: 'POST',
   path: '/',
-  onRequest: fastify.csrfProtection
+  onRequest: fastify.csrfProtection,
   handler: async (req, reply) => {
     return req.body
   }
@@ -118,7 +118,7 @@ fastify.route({
 fastify.route({
   method: 'POST',
   path: '/',
-  onRequest: fastify.csrfProtection
+  onRequest: fastify.csrfProtection,
   handler: async (req, reply) => {
     return req.body
   }
@@ -148,7 +148,7 @@ fastify.route({
 fastify.route({
   method: 'POST',
   path: '/',
-  onRequest: fastify.csrfProtection
+  onRequest: fastify.csrfProtection,
   handler: async (req, reply) => {
     return req.body
   }
