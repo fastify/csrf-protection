@@ -128,7 +128,7 @@ The `secret` shown in the code above is strictly just an example. In all cases, 
 - **Never** hard-coded in the code or `.env` files or anywhere in the repository
 - Stored in some external services like KMS, Vault or something similar
 - Read at run-time and supplied in this option
-- Long enough
+- Of significant character length to provide adequate entropy
 - Truly random sequence of characters (You could use [crypto-random-string](http://npm.im/crypto-random-string))
 
 Apart from these safeguards, it's extremely important to [use HTTPS for your website/app](https://letsencrypt.org/) to avoid a bunch of other potential security issues like [MITM](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) etc.
