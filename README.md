@@ -5,7 +5,7 @@
 
 This plugin helps developers protect their fastify server against [CSRF](https://en.wikipedia.org/wiki/Cross-site_request_forgery) attacks.
 In order to fully protect against CSRF, developers should study [Cross-Site Request Forgery Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
-in great details. See also [pillarjs/understanding-csrf](https://github.com/pillarjs/understanding-csrf) as a good guide.
+in depth. See also [pillarjs/understanding-csrf](https://github.com/pillarjs/understanding-csrf) as a good guide.
 
 ## Security Disclaimer
 
