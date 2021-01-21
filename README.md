@@ -124,7 +124,7 @@ fastify.route({
 
 ### Securing the secret
 
-The `secret` shown in the code above is strictly just a sample. In all cases, you'd need to make sure that the `secret` is:
+The `secret` shown in the code above is strictly just an example. In all cases, you'd need to make sure that the `secret` is:
 - **Never** hard-coded in the code or `.env` files or anywhere in the repository
 - Stored in some external services like KMS, Vault or something similar
 - Read at run-time and supplied in this option
