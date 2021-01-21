@@ -15,8 +15,9 @@ fastify-csrf provides a series of utilities that developers can use to secure th
 We recommend using [fastify-helmet](https://github.com/fastify/fastify-helmet) to implement some of those mitigations.
 
 Security is always a tradeoff between risk mitigation, functionality and developer experience.
-As a result we will not consider a security vulnerability a default that might be unsafe in certain scenarios,
-as long as this module provides a way to provide a full mitigation.
+As a result we will not consider a report of a plugin default configuration option as security
+vulnerability that might be unsafe in certain scenarios as long as this module provides a
+way to provide full mitigation through configuration.
 
 # Install
 ```js
