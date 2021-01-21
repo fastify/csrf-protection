@@ -3,10 +3,21 @@
 ![Node.js CI](https://github.com/fastify/fastify-csrf/workflows/Node.js%20CI/badge.svg)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)
 
-A plugin for adding [CSRF](https://en.wikipedia.org/wiki/Cross-site_request_forgery) protection to Fastify.
-If you want to learn more about CSRF, see [pillarjs/understanding-csrf](https://github.com/pillarjs/understanding-csrf) and [Cross-Site Request Forgery Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
+This plugin helps developers protect their fastify server against [CSRF](https://en.wikipedia.org/wiki/Cross-site_request_forgery) attacks.
+In order to fully protect against CSRF, developers should study [Cross-Site Request Forgery Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
+in depth. See also [pillarjs/understanding-csrf](https://github.com/pillarjs/understanding-csrf) as a good guide.
 
-> CSRF prevention must always be accompanied by other security measures. We recommend using [fastify-helmet](https://github.com/fastify/fastify-helmet)
+## Security Disclaimer
+
+Securing applications against CSRF is a _developer responsibility_ and it should not be fully trusted to any third party modules.
+We do not claim this this module is able to protect an application without a clear study of CSRF, its impact and the needed mitigations.
+fastify-csrf provides a series of utilities that developers can use to secure their application.
+We recommend using [fastify-helmet](https://github.com/fastify/fastify-helmet) to implement some of those mitigations.
+
+Security is always a tradeoff between risk mitigation, functionality and developer experience.
+As a result we will not consider a report of a plugin default configuration option as security
+vulnerability that might be unsafe in certain scenarios as long as this module provides a
+way to provide full mitigation through configuration.
 
 # Install
 ```js
@@ -15,50 +26,6 @@ npm i fastify-csrf
 
 ## Usage
 
-This plugins adds two new method to your code:
-
-### `reply.generateCsrf([opts])`
-
-Generates a secret (if is not already present) and returns a promise that resolves to the associated secret.
-
-```js
-const token = await reply.generateCsrf()
-```
-
-You can also pass the [cookie serialization](https://github.com/fastify/fastify-cookie) options to the function.
-
-### `fastify.csrfProtection(request, reply, next)`
-
-A hook that you can use for protecting routes or enitre plugins from CSRF attacks.
-Generally, we recommend to use the `onRequest` hook, but if you are sending the token
-via the body, then you should use `preValidation` or `preHandler`.
-
-```js
-// protect the entire plugin
-fastify.addHook('onRequest', fastify.csrfProtection)
-
-// protect a single route
-fastify.route({
-  method: 'POST',
-  path: '/',
-  onRequest: fastify.csrfProtection,
-  handler: async (req, reply) => {
-    return req.body
-  }
-})
-```
-
-You can configure the function to read the CSRF token via the `getToken` option, by default the following is used:
-
-```js
-function getToken (req) {
-  return (req.body && req.body._csrf) ||
-    req.headers['csrf-token'] ||
-    req.headers['xsrf-token'] ||
-    req.headers['x-csrf-token'] ||
-    req.headers['x-xsrf-token']
-}
-```
 
 ### Use with [`fastify-cookie`](https://github.com/fastify/fastify-cookie)
 
@@ -155,7 +122,20 @@ fastify.route({
 })
 ```
 
-### Options
+### Securing the secret
+
+The `secret` shown in the code above is strictly just an example. In all cases, you'd need to make sure that the `secret` is:
+- **Never** hard-coded in the code or `.env` files or anywhere in the repository
+- Stored in some external services like KMS, Vault or something similar
+- Read at run-time and supplied in this option
+- Of significant character length to provide adequate entropy
+- Truly random sequence of characters (You could use [crypto-random-string](http://npm.im/crypto-random-string))
+
+Apart from these safeguards, it's extremely important to [use HTTPS for your website/app](https://letsencrypt.org/) to avoid a bunch of other potential security issues like [MITM](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) etc.
+
+## API
+
+### Module Options
 
 | Options      | Description |
 | ----------- | ----------- |
@@ -166,17 +146,48 @@ fastify.route({
 | `sessionPlugin` |  The session plugin that you are using (if applicable).     |
 | `csrfOpts` |  The csrf options. See  [csrf](https://github.com/pillarjs/csrf).     |
 
+### `reply.generateCsrf([opts])`
 
-## Securing the secret
+Generates a secret (if is not already present) and returns a promise that resolves to the associated secret.
 
-The `secret` shown in above code is strictly just a sample. In all cases, you'd need to make sure that the `secret` is:
-- **Never** hard-coded in the code or `.env` files or anywhere in the repository
-- Stored in some external services like KMS, Vault or something similar
-- Read at run-time and supplied in this option
-- Long enough
-- Truly random sequence of characters (You could use [crypto-random-string](http://npm.im/crypto-random-string))
+```js
+const token = await reply.generateCsrf()
+```
 
-Apart from these safeguards, it's extremely important to [use HTTPS for your website/app](https://letsencrypt.org/) to avoid a bunch of other potential security issues like [MITM](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) etc.
+You can also pass the [cookie serialization](https://github.com/fastify/fastify-cookie) options to the function.
+
+### `fastify.csrfProtection(request, reply, next)`
+
+A hook that you can use for protecting routes or enitre plugins from CSRF attacks.
+Generally, we recommend to use the `onRequest` hook, but if you are sending the token
+via the body, then you should use `preValidation` or `preHandler`.
+
+```js
+// protect the entire plugin
+fastify.addHook('onRequest', fastify.csrfProtection)
+
+// protect a single route
+fastify.route({
+  method: 'POST',
+  path: '/',
+  onRequest: fastify.csrfProtection,
+  handler: async (req, reply) => {
+    return req.body
+  }
+})
+```
+
+You can configure the function to read the CSRF token via the `getToken` option, by default the following is used:
+
+```js
+function getToken (req) {
+  return (req.body && req.body._csrf) ||
+    req.headers['csrf-token'] ||
+    req.headers['xsrf-token'] ||
+    req.headers['x-csrf-token'] ||
+    req.headers['x-xsrf-token']
+}
+```
 
 ## License
 
