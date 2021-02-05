@@ -10,7 +10,7 @@ in depth. See also [pillarjs/understanding-csrf](https://github.com/pillarjs/und
 ## Security Disclaimer
 
 Securing applications against CSRF is a _developer responsibility_ and it should not be fully trusted to any third party modules.
-We do not claim this this module is able to protect an application without a clear study of CSRF, its impact and the needed mitigations.
+We do not claim that this module is able to protect an application without a clear study of CSRF, its impact and the needed mitigations.
 fastify-csrf provides a series of utilities that developers can use to secure their application.
 We recommend using [fastify-helmet](https://github.com/fastify/fastify-helmet) to implement some of those mitigations.
 
