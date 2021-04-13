@@ -3,7 +3,7 @@
 ![Node.js CI](https://github.com/fastify/fastify-csrf/workflows/Node.js%20CI/badge.svg)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)
 
-This plugin helps developers protect their fastify server against [CSRF](https://en.wikipedia.org/wiki/Cross-site_request_forgery) attacks.
+This plugin helps developers protect their Fastify server against [CSRF](https://en.wikipedia.org/wiki/Cross-site_request_forgery) attacks.
 In order to fully protect against CSRF, developers should study [Cross-Site Request Forgery Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
 in depth. See also [pillarjs/understanding-csrf](https://github.com/pillarjs/understanding-csrf) as a good guide.
 
@@ -14,7 +14,7 @@ We do not claim that this module is able to protect an application without a cle
 fastify-csrf provides a series of utilities that developers can use to secure their application.
 We recommend using [fastify-helmet](https://github.com/fastify/fastify-helmet) to implement some of those mitigations.
 
-Security is always a tradeoff between risk mitigation, functionality and developer experience.
+Security is always a tradeoff between risk mitigation, functionality, and developer experience.
 As a result we will not consider a report of a plugin default configuration option as security
 vulnerability that might be unsafe in certain scenarios as long as this module provides a
 way to provide full mitigation through configuration.
@@ -124,14 +124,14 @@ fastify.route({
 
 ### Securing the secret
 
-The `secret` shown in the code above is strictly just an example. In all cases, you'd need to make sure that the `secret` is:
+The `secret` shown in the code above is strictly just an example. In all cases, you would need to make sure that the `secret` is:
 - **Never** hard-coded in the code or `.env` files or anywhere in the repository
 - Stored in some external services like KMS, Vault or something similar
 - Read at run-time and supplied in this option
 - Of significant character length to provide adequate entropy
 - Truly random sequence of characters (You could use [crypto-random-string](http://npm.im/crypto-random-string))
 
-Apart from these safeguards, it's extremely important to [use HTTPS for your website/app](https://letsencrypt.org/) to avoid a bunch of other potential security issues like [MITM](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) etc.
+Apart from these safeguards, it is extremely important to [use HTTPS for your website/app](https://letsencrypt.org/) to avoid a bunch of other potential security issues like [MITM](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) etc.
 
 ## API
 
@@ -158,7 +158,7 @@ You can also pass the [cookie serialization](https://github.com/fastify/fastify-
 
 ### `fastify.csrfProtection(request, reply, next)`
 
-A hook that you can use for protecting routes or enitre plugins from CSRF attacks.
+A hook that you can use for protecting routes or entire plugins from CSRF attacks.
 Generally, we recommend to use the `onRequest` hook, but if you are sending the token
 via the body, then you should use `preValidation` or `preHandler`.
 
