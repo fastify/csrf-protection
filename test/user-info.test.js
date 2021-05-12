@@ -1,0 +1,66 @@
+'use strict'
+
+const { test } = require('tap')
+const Fastify = require('fastify')
+const fastifyCookie = require('fastify-cookie')
+const fastifySession = require('fastify-session')
+const fastifySecureSession = require('fastify-secure-session')
+const proxyquire = require('proxyquire')
+const sinon = require('sinon')
+const fastifyCsrf = require('../')
+
+const sodium = require('sodium-native')
+const key = Buffer.alloc(sodium.crypto_secretbox_KEYBYTES)
+sodium.randombytes_buf(key)
+
+test('Cookies with User-Info', async t => {
+  const fastify = Fastify({ logger: true })
+  await fastify.register(fastifyCookie)
+  await fastify.register(fastifyCsrf, {
+    getUserInfo (req) {
+      return userInfoDB[req.body.username]
+    }
+  })
+
+  const userInfoDB = {
+    foo: 'a42'
+  }
+
+  fastify.post('/login', async (req, reply) => {
+    const token = await reply.generateCsrf({ userInfo: userInfoDB[req.body.username] })
+    return { token }
+  })
+
+  // must be preHandler as we are parsing the body
+  fastify.post('/', { preHandler: fastify.csrfProtection }, async (req, reply) => {
+    return req.body
+  })
+
+  const response1 = await fastify.inject({
+    method: 'POST',
+    path: '/login',
+    body: {
+      username: 'foo'
+    }
+  })
+
+  t.equal(response1.statusCode, 200)
+
+  const cookie1 = response1.cookies[0]
+  const { token } = response1.json()
+  console.log(cookie1)
+
+  const response2 = await fastify.inject({
+    method: 'POST',
+    path: '/',
+    cookies: {
+      '_csrf': cookie1.value
+    },
+    body: {
+      _csrf: token,
+      username: 'foo'
+    }
+  })
+
+  t.equal(response2.statusCode, 200)
+})

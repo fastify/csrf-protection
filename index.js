@@ -2,7 +2,7 @@
 
 const assert = require('assert')
 const fp = require('fastify-plugin')
-const CSRF = require('csrf')
+const CSRF = require('@fastify/csrf')
 const { Forbidden } = require('http-errors')
 
 const defaultOptions = {
@@ -10,6 +10,7 @@ const defaultOptions = {
   cookieOpts: { path: '/', sameSite: true, httpOnly: true },
   sessionKey: '_csrf',
   getToken: getTokenDefault,
+  getUserInfo: getUserInfoDefault,
   sessionPlugin: 'fastify-cookie'
 }
 
@@ -19,6 +20,7 @@ async function csrfPlugin (fastify, opts) {
     cookieOpts,
     sessionKey,
     getToken,
+    getUserInfo,
     sessionPlugin,
     csrfOpts
   } = Object.assign({}, defaultOptions, opts)
@@ -26,6 +28,7 @@ async function csrfPlugin (fastify, opts) {
   assert(typeof cookieKey === 'string', 'cookieKey should be a string')
   assert(typeof sessionKey === 'string', 'sessionKey should be a string')
   assert(typeof getToken === 'function', 'getToken should be a function')
+  assert(typeof getUserInfo === 'function', 'getUserInfo should be a function')
   assert(typeof cookieOpts === 'object', 'cookieOpts should be a object')
   assert(
     ['fastify-cookie', 'fastify-session', 'fastify-secure-session'].includes(sessionPlugin),
@@ -50,11 +53,13 @@ async function csrfPlugin (fastify, opts) {
     let secret = isCookieSigned
       ? this.unsignCookie(this.request.cookies[cookieKey] || '').value
       : this.request.cookies[cookieKey]
+    const userInfo = opts ? opts.userInfo : undefined
     if (!secret) {
       secret = await tokens.secret()
       this.setCookie(cookieKey, secret, Object.assign({}, cookieOpts, opts))
     }
-    return tokens.create(secret)
+    console.log(userInfo)
+    return tokens.create(secret, userInfo)
   }
 
   async function generateCsrfSecureSession (opts) {
@@ -80,11 +85,13 @@ async function csrfPlugin (fastify, opts) {
 
   function csrfProtection (req, reply, next) {
     const secret = getSecret(req, reply)
+    console.log('secret', secret)
     if (!secret) {
       req.log.warn('Missing csrf secret')
       return reply.send(new Forbidden('Missing csrf secret'))
     }
-    if (!tokens.verify(secret, getToken(req))) {
+    console.log(getUserInfo(req))
+    if (!tokens.verify(secret, getToken(req), getUserInfo(req))) {
       req.log.warn('Invalid csrf token')
       return reply.send(new Forbidden('Invalid csrf token'))
     }
@@ -105,11 +112,16 @@ async function csrfPlugin (fastify, opts) {
 }
 
 function getTokenDefault (req) {
+  console.log(req.headers)
   return (req.body && req.body._csrf) ||
     req.headers['csrf-token'] ||
     req.headers['xsrf-token'] ||
     req.headers['x-csrf-token'] ||
     req.headers['x-xsrf-token']
+}
+
+function getUserInfoDefault (req) {
+  return undefined
 }
 
 module.exports = fp(csrfPlugin, {

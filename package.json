@@ -28,7 +28,7 @@
     "directory": "./test"
   },
   "dependencies": {
-    "csrf": "^3.1.0",
+    "@fastify/csrf": "^4.0.0",
     "fastify-plugin": "^3.0.0",
     "http-errors": "^1.8.0"
   },
