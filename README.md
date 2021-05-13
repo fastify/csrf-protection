@@ -158,6 +158,7 @@ const token = await reply.generateCsrf()
 You can also pass the [cookie serialization](https://github.com/fastify/fastify-cookie) options to the function.
 
 The option `userInfo` is required if `getUserInfo` has been specified in the module option.
+The provided `userInfo` is hashed  inside the csrf token and it is not directly exposed.
 This option is needed to protect against cookie tossing.
 
 ### `fastify.csrfProtection(request, reply, next)`
