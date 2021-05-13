@@ -160,7 +160,7 @@ test('csrf options', async () => {
   const csrf = sinon.stub()
 
   const fastifyCsrf = proxyquire('../', {
-    csrf: function (...args) {
+    '@fastify/csrf': function (...args) {
       return csrf(...args)
     }
   })
