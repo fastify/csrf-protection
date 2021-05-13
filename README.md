@@ -145,6 +145,7 @@ Apart from these safeguards, it is extremely important to [use HTTPS for your we
 | `cookieOpts` |  The cookie serialization options. See [fastify-cookie](https://github.com/fastify/fastify-cookie).    |
 | `sessionKey` |  The key where to store the CSRF secret in the session.     |
 | `getToken` |  A sync function to get the CSRF secret from the request.     |
+| `getUserInfo` |  A sync function to get the a string of user-specific information to prevent cookie tossing.     |
 | `sessionPlugin` |  The session plugin that you are using (if applicable).     |
 | `csrfOpts` |  The csrf options. See  [csrf](https://github.com/pillarjs/csrf).     |
 
@@ -157,6 +158,10 @@ const token = await reply.generateCsrf()
 ```
 
 You can also pass the [cookie serialization](https://github.com/fastify/fastify-cookie) options to the function.
+
+The option `userInfo` is required if `getUserInfo` has been specified in the module option.
+The provided `userInfo` is hashed  inside the csrf token and it is not directly exposed.
+This option is needed to protect against cookie tossing.
 
 ### `fastify.csrfProtection(request, reply, next)`
 

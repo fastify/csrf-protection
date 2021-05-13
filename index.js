@@ -2,7 +2,7 @@
 
 const assert = require('assert')
 const fp = require('fastify-plugin')
-const CSRF = require('csrf')
+const CSRF = require('@fastify/csrf')
 const { Forbidden } = require('http-errors')
 
 const defaultOptions = {
@@ -10,6 +10,7 @@ const defaultOptions = {
   cookieOpts: { path: '/', sameSite: true, httpOnly: true },
   sessionKey: '_csrf',
   getToken: getTokenDefault,
+  getUserInfo: getUserInfoDefault,
   sessionPlugin: 'fastify-cookie'
 }
 
@@ -19,19 +20,25 @@ async function csrfPlugin (fastify, opts) {
     cookieOpts,
     sessionKey,
     getToken,
-    sessionPlugin,
-    csrfOpts
+    getUserInfo,
+    sessionPlugin
   } = Object.assign({}, defaultOptions, opts)
+
+  const csrfOpts = opts && opts.csrfOpts ? opts.csrfOpts : {}
 
   assert(typeof cookieKey === 'string', 'cookieKey should be a string')
   assert(typeof sessionKey === 'string', 'sessionKey should be a string')
   assert(typeof getToken === 'function', 'getToken should be a function')
+  assert(typeof getUserInfo === 'function', 'getUserInfo should be a function')
   assert(typeof cookieOpts === 'object', 'cookieOpts should be a object')
   assert(
     ['fastify-cookie', 'fastify-session', 'fastify-secure-session'].includes(sessionPlugin),
     "sessionPlugin should be one of the following: 'fastify-cookie', 'fastify-session', 'fastify-secure-session'"
   )
 
+  if (opts.getUserInfo) {
+    csrfOpts.userInfo = true
+  }
   const tokens = new CSRF(csrfOpts)
 
   const isCookieSigned = cookieOpts && cookieOpts.signed
@@ -50,11 +57,12 @@ async function csrfPlugin (fastify, opts) {
     let secret = isCookieSigned
       ? this.unsignCookie(this.request.cookies[cookieKey] || '').value
       : this.request.cookies[cookieKey]
+    const userInfo = opts ? opts.userInfo : undefined
     if (!secret) {
       secret = await tokens.secret()
       this.setCookie(cookieKey, secret, Object.assign({}, cookieOpts, opts))
     }
-    return tokens.create(secret)
+    return tokens.create(secret, userInfo)
   }
 
   async function generateCsrfSecureSession (opts) {
@@ -63,19 +71,21 @@ async function csrfPlugin (fastify, opts) {
       secret = await tokens.secret()
       this.request.session.set(sessionKey, secret)
     }
+    const userInfo = opts ? opts.userInfo : undefined
     if (opts) {
       this.request.session.options(opts)
     }
-    return tokens.create(secret)
+    return tokens.create(secret, userInfo)
   }
 
-  async function generateCsrfSession () {
+  async function generateCsrfSession (opts) {
     let secret = this.request.session[sessionKey]
+    const userInfo = opts ? opts.userInfo : undefined
     if (!secret) {
       secret = await tokens.secret()
       this.request.session[sessionKey] = secret
     }
-    return tokens.create(secret)
+    return tokens.create(secret, userInfo)
   }
 
   function csrfProtection (req, reply, next) {
@@ -84,7 +94,7 @@ async function csrfPlugin (fastify, opts) {
       req.log.warn('Missing csrf secret')
       return reply.send(new Forbidden('Missing csrf secret'))
     }
-    if (!tokens.verify(secret, getToken(req))) {
+    if (!tokens.verify(secret, getToken(req), getUserInfo(req))) {
       req.log.warn('Invalid csrf token')
       return reply.send(new Forbidden('Invalid csrf token'))
     }
@@ -110,6 +120,10 @@ function getTokenDefault (req) {
     req.headers['xsrf-token'] ||
     req.headers['x-csrf-token'] ||
     req.headers['x-xsrf-token']
+}
+
+function getUserInfoDefault (req) {
+  return undefined
 }
 
 module.exports = fp(csrfPlugin, {
