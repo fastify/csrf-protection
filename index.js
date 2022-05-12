@@ -11,7 +11,7 @@ const defaultOptions = {
   sessionKey: '_csrf',
   getToken: getTokenDefault,
   getUserInfo: getUserInfoDefault,
-  sessionPlugin: 'fastify-cookie'
+  sessionPlugin: '@fastify/cookie'
 }
 
 async function csrfPlugin (fastify, opts) {
@@ -32,8 +32,8 @@ async function csrfPlugin (fastify, opts) {
   assert(typeof getUserInfo === 'function', 'getUserInfo should be a function')
   assert(typeof cookieOpts === 'object', 'cookieOpts should be a object')
   assert(
-    ['fastify-cookie', 'fastify-session', 'fastify-secure-session'].includes(sessionPlugin),
-    "sessionPlugin should be one of the following: 'fastify-cookie', 'fastify-session', 'fastify-secure-session'"
+    ['@fastify/cookie', '@fastify/session', '@fastify/secure-session'].includes(sessionPlugin),
+    "sessionPlugin should be one of the following: '@fastify/cookie', '@fastify/session', '@fastify/secure-session'"
   )
 
   if (opts.getUserInfo) {
@@ -43,9 +43,9 @@ async function csrfPlugin (fastify, opts) {
 
   const isCookieSigned = cookieOpts && cookieOpts.signed
 
-  if (sessionPlugin === 'fastify-secure-session') {
+  if (sessionPlugin === '@fastify/secure-session') {
     fastify.decorateReply('generateCsrf', generateCsrfSecureSession)
-  } else if (sessionPlugin === 'fastify-session') {
+  } else if (sessionPlugin === '@fastify/session') {
     fastify.decorateReply('generateCsrf', generateCsrfSession)
   } else {
     fastify.decorateReply('generateCsrf', generateCsrfCookie)
@@ -102,9 +102,9 @@ async function csrfPlugin (fastify, opts) {
   }
 
   function getSecret (req, reply) {
-    if (sessionPlugin === 'fastify-secure-session') {
+    if (sessionPlugin === '@fastify/secure-session') {
       return req.session.get(sessionKey)
-    } else if (sessionPlugin === 'fastify-session') {
+    } else if (sessionPlugin === '@fastify/session') {
       return req.session[sessionKey]
     } else {
       return isCookieSigned
@@ -127,7 +127,6 @@ function getUserInfoDefault (req) {
 }
 
 module.exports = fp(csrfPlugin, {
-  fastify: '>=3.0.0',
-  name: 'fastify-csrf',
-  dependencies: ['fastify-cookie']
+  fastify: '4.x',
+  name: '@fastify/csrf-protection'
 })

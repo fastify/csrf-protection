@@ -1,4 +1,4 @@
-# fastify-csrf
+# @fastify/csrf-protection
 
 ![CI](https://github.com/fastify/fastify-csrf/workflows/CI/badge.svg)
 [![NPM version](https://img.shields.io/npm/v/fastify-csrf.svg?style=flat)](https://www.npmjs.com/package/fastify-csrf)
@@ -23,24 +23,24 @@ way to provide full mitigation through configuration.
 
 # Install
 ```js
-npm i fastify-csrf
+npm i @fastify/csrf-protection
 ```
 
 ## Usage
 
 
-### Use with [`fastify-cookie`](https://github.com/fastify/fastify-cookie)
+### Use with [`@fastify/cookie`](https://github.com/fastify/@fastify/cookie)
 
-If you use `fastify-csrf` with `fastify-cookie`, the CSRF secret will be added to the response cookies.
+If you use `fastify-csrf` with `@fastify/cookie`, the CSRF secret will be added to the response cookies.
 By default, the cookie used will be named `_csrf`, but you can rename it via the `cookieKey` option.
 When `cookieOpts` are provided, they **override** the default options. Make sure you restore any of the default options which provide sensible and secure defaults.
 
 ```js
-fastify.register(require('fastify-cookie'))
+fastify.register(require('@fastify/cookie'))
 fastify.register(require('fastify-csrf'))
 
 // if you want to sign cookies:
-fastify.register(require('fastify-cookie'), { secret }) // See following section to ensure security
+fastify.register(require('@fastify/cookie'), { secret }) // See following section to ensure security
 fastify.register(require('fastify-csrf'), { cookieOpts: { signed: true } })
 
 // generate a token
@@ -64,14 +64,14 @@ fastify.route({
 })
 ```
 
-### Use with [`fastify-session`](https://github.com/SerayaEryn/fastify-session)
+### Use with [`@fastify/session`](https://github.com/fastify/session)
 
-If you use `fastify-csrf` with `fastify-session`, the CSRF secret will be added to the session.
+If you use `@fastify/csrf-protection` with `@fastify/session`, the CSRF secret will be added to the session.
 By default, the key used will be named `_csrf`, but you can rename it via the `sessionKey` option.
 
 ```js
-fastify.register(require('fastify-session'))
-fastify.register(require('fastify-csrf'), { sessionPlugin: 'fastify-session' })
+fastify.register(require('@fastify-session'))
+fastify.register(require('@fastify/csrf-protection'), { sessionPlugin: '@fastify/session' })
 
 // generate a token
 fastify.route({
@@ -142,7 +142,7 @@ Apart from these safeguards, it is extremely important to [use HTTPS for your we
 | Options      | Description |
 | ----------- | ----------- |
 | `cookieKey` |  The name of the cookie where the CSRF secret will be stored, default `_csrf`.     |
-| `cookieOpts` |  The cookie serialization options. See [fastify-cookie](https://github.com/fastify/fastify-cookie).    |
+| `cookieOpts` |  The cookie serialization options. See [@fastify/cookie](https://github.com/fastify/fastify-cookie).    |
 | `sessionKey` |  The key where to store the CSRF secret in the session.     |
 | `getToken` |  A sync function to get the CSRF secret from the request.     |
 | `getUserInfo` |  A sync function to get the a string of user-specific information to prevent cookie tossing.     |
