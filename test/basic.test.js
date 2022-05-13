@@ -2,9 +2,9 @@
 
 const { test } = require('tap')
 const Fastify = require('fastify')
-const fastifyCookie = require('fastify-cookie')
-const fastifySession = require('fastify-session')
-const fastifySecureSession = require('fastify-secure-session')
+const fastifyCookie = require('@fastify/cookie')
+const fastifySession = require('@fastify/session')
+const fastifySecureSession = require('@fastify/secure-session')
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const fastifyCsrf = require('../')
@@ -73,7 +73,7 @@ test('Fastify Session', t => {
       secret: 'a'.repeat(32),
       cookie: { path: '/', secure: false }
     })
-    await fastify.register(fastifyCsrf, { sessionPlugin: 'fastify-session' })
+    await fastify.register(fastifyCsrf, { sessionPlugin: '@fastify/session' })
     fastify.decorate('testType', 'fastify-session')
     return fastify
   }
@@ -89,7 +89,7 @@ test('Fastify Secure Session', t => {
   async function load () {
     const fastify = Fastify()
     await fastify.register(fastifySecureSession, { key, cookie: { path: '/', secure: false } })
-    await fastify.register(fastifyCsrf, { sessionPlugin: 'fastify-secure-session' })
+    await fastify.register(fastifyCsrf, { sessionPlugin: '@fastify/secure-session' })
     fastify.decorate('testType', 'fastify-secure-session')
     return fastify
   }
@@ -109,7 +109,7 @@ test('Validation', t => {
     fastify.register(fastifyCookie)
     fastify.register(fastifyCsrf, { cookieKey: 42 })
     fastify.ready(err => {
-      t.strictEqual(err.message, 'cookieKey should be a string')
+      t.equal(err.message, 'cookieKey should be a string')
     })
   })
 
@@ -119,7 +119,7 @@ test('Validation', t => {
     fastify.register(fastifyCookie)
     fastify.register(fastifyCsrf, { sessionKey: 42 })
     fastify.ready(err => {
-      t.strictEqual(err.message, 'sessionKey should be a string')
+      t.equal(err.message, 'sessionKey should be a string')
     })
   })
 
@@ -129,7 +129,7 @@ test('Validation', t => {
     fastify.register(fastifyCookie)
     fastify.register(fastifyCsrf, { getToken: 42 })
     fastify.ready(err => {
-      t.strictEqual(err.message, 'getToken should be a function')
+      t.equal(err.message, 'getToken should be a function')
     })
   })
 
@@ -139,7 +139,7 @@ test('Validation', t => {
     fastify.register(fastifyCookie)
     fastify.register(fastifyCsrf, { cookieOpts: 42 })
     fastify.ready(err => {
-      t.strictEqual(err.message, 'cookieOpts should be a object')
+      t.equal(err.message, 'cookieOpts should be a object')
     })
   })
 
@@ -149,7 +149,7 @@ test('Validation', t => {
     fastify.register(fastifyCookie)
     fastify.register(fastifyCsrf, { sessionPlugin: 42 })
     fastify.ready(err => {
-      t.strictEqual(err.message, "sessionPlugin should be one of the following: 'fastify-cookie', 'fastify-session', 'fastify-secure-session'")
+      t.equal(err.message, "sessionPlugin should be one of the following: '@fastify/cookie', '@fastify/session', '@fastify/secure-session'")
     })
   })
 
@@ -192,7 +192,7 @@ function runTest (t, load, tkn, hook = 'onRequest') {
       path: '/'
     })
 
-    t.strictEqual(response.statusCode, 200)
+    t.equal(response.statusCode, 200)
     const cookie = response.cookies[0]
     const tokenFirst = response.json().token
 
@@ -204,16 +204,18 @@ function runTest (t, load, tkn, hook = 'onRequest') {
       }
     })
 
-    t.strictEqual(response.statusCode, 200)
+    t.equal(response.statusCode, 200)
     const cookieSecond = response.cookies[0]
     const token = response.json().token
 
     if (fastify.testType === 'fastify-session') {
-      t.deepEqual(cookie, cookieSecond)
+      t.same(cookie, cookieSecond)
+    } else if (fastify.testType === 'fastify-secure-session') {
+      t.not(cookie, cookieSecond)
     } else {
-      t.strictEqual(cookieSecond, undefined)
+      t.equal(cookieSecond, undefined)
     }
-    t.notStrictEqual(tokenFirst, token)
+    t.not(tokenFirst, token)
 
     if (tkn.place === 'body') {
       response = await fastify.inject({
@@ -241,7 +243,7 @@ function runTest (t, load, tkn, hook = 'onRequest') {
       })
     }
 
-    t.strictEqual(response.statusCode, 200)
+    t.equal(response.statusCode, 200)
     t.match(response.json(), { hello: 'world' })
 
     response = await fastify.inject({
@@ -250,7 +252,7 @@ function runTest (t, load, tkn, hook = 'onRequest') {
       payload: { hello: 'world' }
     })
 
-    t.strictEqual(response.statusCode, 403)
+    t.equal(response.statusCode, 403)
     t.match(response.json(), { message: 'Missing csrf secret' })
 
     response = await fastify.inject({
@@ -262,7 +264,7 @@ function runTest (t, load, tkn, hook = 'onRequest') {
       }
     })
 
-    t.strictEqual(response.statusCode, 403)
+    t.equal(response.statusCode, 403)
     t.match(response.json(), { message: 'Invalid csrf token' })
   })
 }

@@ -37,7 +37,7 @@ export interface FastifyCsrfOptions {
   cookieOpts?: CookieSerializeOptions;
   sessionKey?: string;
   getToken?: GetTokenFn;
-  sessionPlugin?: 'fastify-cookie' | 'fastify-session' | 'fastify-secure-session';
+  sessionPlugin?: '@fastify/cookie' | '@fastify/session' | '@fastify/secure-session';
 }
 
 declare const fastifyCsrf: FastifyPlugin<FastifyCsrfOptions>;

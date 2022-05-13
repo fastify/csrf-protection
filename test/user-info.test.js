@@ -2,9 +2,9 @@
 
 const { test } = require('tap')
 const Fastify = require('fastify')
-const fastifyCookie = require('fastify-cookie')
-const fastifySession = require('fastify-session')
-const fastifySecureSession = require('fastify-secure-session')
+const fastifyCookie = require('@fastify/cookie')
+const fastifySession = require('@fastify/session')
+const fastifySecureSession = require('@fastify/secure-session')
 const fastifyCsrf = require('../')
 
 const sodium = require('sodium-native')
@@ -70,7 +70,7 @@ test('Session with User-Info', async t => {
     cookie: { path: '/', secure: false }
   })
   await fastify.register(fastifyCsrf, {
-    sessionPlugin: 'fastify-session',
+    sessionPlugin: '@fastify/session',
     getUserInfo (req) {
       return req.session.username
     }
@@ -119,7 +119,7 @@ test('SecureSession with User-Info', async t => {
   const fastify = Fastify()
   await fastify.register(fastifySecureSession, { key, cookie: { path: '/', secure: false } })
   await fastify.register(fastifyCsrf, {
-    sessionPlugin: 'fastify-secure-session',
+    sessionPlugin: '@fastify/secure-session',
     getUserInfo (req) {
       return req.session.get('username')
     }
