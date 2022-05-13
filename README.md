@@ -1,8 +1,8 @@
 # @fastify/csrf-protection
 
-![CI](https://github.com/fastify/fastify-csrf/workflows/CI/badge.svg)
-[![NPM version](https://img.shields.io/npm/v/fastify-csrf.svg?style=flat)](https://www.npmjs.com/package/fastify-csrf)
-[![Known Vulnerabilities](https://snyk.io/test/github/fastify/fastify-csrf/badge.svg)](https://snyk.io/test/github/fastify/fastify-csrf)
+![CI](https://github.com/fastify/csrf-protection/workflows/CI/badge.svg)
+[![NPM version](https://img.shields.io/npm/v/@fastify/csrf-protection.svg?style=flat)](https://www.npmjs.com/package/@fastify/csrf-protection)
+[![Known Vulnerabilities](https://snyk.io/test/github/fastify/csrf-protection/badge.svg)](https://snyk.io/test/github/fastify/csrf-protection)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://standardjs.com/)
 
 This plugin helps developers protect their Fastify server against [CSRF](https://en.wikipedia.org/wiki/Cross-site_request_forgery) attacks.
@@ -13,8 +13,8 @@ in depth. See also [pillarjs/understanding-csrf](https://github.com/pillarjs/und
 
 Securing applications against CSRF is a _developer responsibility_ and it should not be fully trusted to any third party modules.
 We do not claim that this module is able to protect an application without a clear study of CSRF, its impact and the needed mitigations.
-fastify-csrf provides a series of utilities that developers can use to secure their application.
-We recommend using [fastify-helmet](https://github.com/fastify/fastify-helmet) to implement some of those mitigations.
+@fastify/csrf-protection provides a series of utilities that developers can use to secure their application.
+We recommend using [@fastify/helmet](https://github.com/fastify/fastify-helmet) to implement some of those mitigations.
 
 Security is always a tradeoff between risk mitigation, functionality, and developer experience.
 As a result we will not consider a report of a plugin default configuration option as security
@@ -31,17 +31,17 @@ npm i @fastify/csrf-protection
 
 ### Use with [`@fastify/cookie`](https://github.com/fastify/@fastify/cookie)
 
-If you use `fastify-csrf` with `@fastify/cookie`, the CSRF secret will be added to the response cookies.
+If you use `@fastify/csrf-protection` with `@fastify/cookie`, the CSRF secret will be added to the response cookies.
 By default, the cookie used will be named `_csrf`, but you can rename it via the `cookieKey` option.
 When `cookieOpts` are provided, they **override** the default options. Make sure you restore any of the default options which provide sensible and secure defaults.
 
 ```js
 fastify.register(require('@fastify/cookie'))
-fastify.register(require('fastify-csrf'))
+fastify.register(require('@fastify/csrf-protection'))
 
 // if you want to sign cookies:
 fastify.register(require('@fastify/cookie'), { secret }) // See following section to ensure security
-fastify.register(require('fastify-csrf'), { cookieOpts: { signed: true } })
+fastify.register(require('@fastify/csrf-protection'), { cookieOpts: { signed: true } })
 
 // generate a token
 fastify.route({
@@ -94,14 +94,14 @@ fastify.route({
 })
 ```
 
-### Use with [`fastify-secure-session`](https://github.com/fastify/fastify-secure-session)
+### Use with [`@fastify/secure-session`](https://github.com/fastify/fastify-secure-session)
 
-If you use `fastify-csrf` with `fastify-secure-session`, the CSRF secret will be added to the session.
+If you use `@fastify/csrf-protection` with `@fastify/secure-session`, the CSRF secret will be added to the session.
 By default, the key used will be named `_csrf`, but you can rename it via the `sessionKey` option.
 
 ```js
-fastify.register(require('fastify-secure-session'))
-fastify.register(require('fastify-csrf'), { sessionPlugin: 'fastify-secure-session' })
+fastify.register(require('@fastify/secure-session'))
+fastify.register(require('@fastify/csrf-protection'), { sessionPlugin: '@fastify/secure-session' })
 
 // generate a token
 fastify.route({
