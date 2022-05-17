@@ -127,6 +127,6 @@ function getUserInfoDefault (req) {
 }
 
 module.exports = fp(csrfPlugin, {
-  fastify: '4.x',
-  name: '@fastify/csrf-protection'
+  fastify: '3.x',
+  name: 'fastify-csrf'
 })
