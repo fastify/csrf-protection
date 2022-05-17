@@ -2,7 +2,6 @@
 
 ![CI](https://github.com/fastify/csrf-protection/workflows/CI/badge.svg)
 [![NPM version](https://img.shields.io/npm/v/@fastify/csrf-protection.svg?style=flat)](https://www.npmjs.com/package/@fastify/csrf-protection)
-[![Known Vulnerabilities](https://snyk.io/test/github/fastify/csrf-protection/badge.svg)](https://snyk.io/test/github/fastify/csrf-protection)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://standardjs.com/)
 
 This plugin helps developers protect their Fastify server against [CSRF](https://en.wikipedia.org/wiki/Cross-site_request_forgery) attacks.
