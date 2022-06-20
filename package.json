@@ -33,7 +33,7 @@
     "http-errors": "^2.0.0"
   },
   "devDependencies": {
-    "@types/node": "^17.0.0",
+    "@types/node": "^18.0.0",
     "fastify": "^4.0.0-rc.2",
     "@fastify/cookie": "^7.0.0",
     "@fastify/secure-session": "^5.0.0",
