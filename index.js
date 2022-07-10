@@ -3,7 +3,10 @@
 const assert = require('assert')
 const fp = require('fastify-plugin')
 const CSRF = require('@fastify/csrf')
-const { Forbidden } = require('http-errors')
+const createError = require('@fastify/error')
+
+const MissingCSRFSecretError = createError('FST_CSRF_MISSING_SECRET', 'Missing csrf secret', 403)
+const InvalidCSRFTokenError = createError('FST_CSRF_INVALID_TOKEN', 'Invalid csrf token', 403)
 
 const defaultOptions = {
   cookieKey: '_csrf',
@@ -92,11 +95,11 @@ async function csrfPlugin (fastify, opts) {
     const secret = getSecret(req, reply)
     if (!secret) {
       req.log.warn('Missing csrf secret')
-      return reply.send(new Forbidden('Missing csrf secret'))
+      return reply.send(new MissingCSRFSecretError())
     }
     if (!tokens.verify(secret, getToken(req), getUserInfo(req))) {
       req.log.warn('Invalid csrf token')
-      return reply.send(new Forbidden('Invalid csrf token'))
+      return reply.send(new InvalidCSRFTokenError())
     }
     next()
   }
