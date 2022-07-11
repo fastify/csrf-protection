@@ -56,22 +56,22 @@ async function csrfPlugin (fastify, opts) {
 
   fastify.decorate('csrfProtection', csrfProtection)
 
-  async function generateCsrfCookie (opts) {
+  function generateCsrfCookie (opts) {
     let secret = isCookieSigned
       ? this.unsignCookie(this.request.cookies[cookieKey] || '').value
       : this.request.cookies[cookieKey]
     const userInfo = opts ? opts.userInfo : undefined
     if (!secret) {
-      secret = await tokens.secret()
+      secret = tokens.secretSync()
       this.setCookie(cookieKey, secret, Object.assign({}, cookieOpts, opts))
     }
     return tokens.create(secret, userInfo)
   }
 
-  async function generateCsrfSecureSession (opts) {
+  function generateCsrfSecureSession (opts) {
     let secret = this.request.session.get(sessionKey)
     if (!secret) {
-      secret = await tokens.secret()
+      secret = tokens.secretSync()
       this.request.session.set(sessionKey, secret)
     }
     const userInfo = opts ? opts.userInfo : undefined
@@ -81,11 +81,11 @@ async function csrfPlugin (fastify, opts) {
     return tokens.create(secret, userInfo)
   }
 
-  async function generateCsrfSession (opts) {
+  function generateCsrfSession (opts) {
     let secret = this.request.session[sessionKey]
     const userInfo = opts ? opts.userInfo : undefined
     if (!secret) {
-      secret = await tokens.secret()
+      secret = tokens.secretSync()
       this.request.session[sessionKey] = secret
     }
     return tokens.create(secret, userInfo)
