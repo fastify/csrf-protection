@@ -1,6 +1,6 @@
 {
   "name": "@fastify/csrf-protection",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "description": "A plugin for adding CSRF protection to Fastify.",
   "main": "index.js",
   "types": "index.d.ts",
@@ -28,7 +28,7 @@
     "directory": "./test"
   },
   "dependencies": {
-    "@fastify/csrf": "^5.0.0",
+    "@fastify/csrf": "^5.1.0",
     "@fastify/error": "^3.0.0",
     "fastify-plugin": "^3.0.0"
   },
