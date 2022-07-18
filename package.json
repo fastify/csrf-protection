@@ -30,7 +30,7 @@
   "dependencies": {
     "@fastify/csrf": "^5.1.0",
     "@fastify/error": "^3.0.0",
-    "fastify-plugin": "^3.0.0"
+    "fastify-plugin": "^4.0.0"
   },
   "devDependencies": {
     "@fastify/cookie": "^7.0.0",
