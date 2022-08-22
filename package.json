@@ -33,7 +33,7 @@
     "fastify-plugin": "^4.0.0"
   },
   "devDependencies": {
-    "@fastify/cookie": "^7.0.0",
+    "@fastify/cookie": "^8.0.0",
     "@fastify/secure-session": "^5.0.0",
     "@fastify/session": "^9.0.0",
     "@types/node": "^18.0.0",
