@@ -195,6 +195,11 @@ function getToken (req) {
 }
 ```
 
+We must use the `preHandler` lifecycle if we want to accept CSRF tokens
+inside request bodies. The default property matched is `_csrf`, but it's possible
+to constumize this by chainging the `getToken` function.
+If we are using headers, using the `onRequest` lifecycle is sufficient and safer.
+
 ## License
 
 [MIT](./LICENSE)
