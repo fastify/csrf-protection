@@ -1,38 +1,36 @@
-import Fastify from "fastify";
-import fastifyCookie from "@fastify/cookie";
-import fastifyCsrfProtection from "./index.js";
+import Fastify from 'fastify'
+import fastifyCookie from '@fastify/cookie'
+import fastifyCsrfProtection from './index.js'
 
 const fastify = Fastify({
   logger: true
-});
+})
 
-fastify.register(fastifyCookie);
-await fastify.register(fastifyCsrfProtection);
-
+fastify.register(fastifyCookie)
+await fastify.register(fastifyCsrfProtection)
 
 fastify.post(
-  "/",
+  '/',
   {
     preHandler: [
       async function (req) {
-        console.log(req.cookies);
+        console.log(req.cookies)
       },
       fastify.csrfProtection
     ]
   },
   async (req, reply) => {
-    return req.body;
+    return req.body
   }
-);
-
+)
 
 // generate a token
 fastify.route({
-  method: "GET",
-  url: "/",
+  method: 'GET',
+  url: '/',
   handler: async (req, reply) => {
-    const token = await reply.generateCsrf();
-    reply.type("text/html");
+    const token = await reply.generateCsrf()
+    reply.type('text/html')
     // return { token: token };
 
     return `
@@ -61,15 +59,15 @@ fastify.route({
         </body>
       </html>
     
-    `;
+    `
   }
-});
+})
 
 // Run the server!
 fastify.listen({ port: 3001 }, function (err, address) {
   if (err) {
-    fastify.log.error(err);
-    process.exit(1);
+    fastify.log.error(err)
+    process.exit(1)
   }
   // Server is now listening on ${address}
-});
+})
