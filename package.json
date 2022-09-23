@@ -3,9 +3,10 @@
   "version": "5.1.0",
   "description": "A plugin for adding CSRF protection to Fastify.",
   "main": "index.js",
-  "types": "index.d.ts",
+  "types": "types/index.d.ts",
   "scripts": {
-    "test": "standard && tap --100 test/*.test.js && tsd"
+    "test": "standard && tap --100 test/*.test.js && npm run test:typescript",
+    "test:typescript": "tsd"
   },
   "repository": {
     "type": "git",
@@ -24,9 +25,6 @@
     "url": "https://github.com/fastify/fastify-csrf/issues"
   },
   "homepage": "https://github.com/fastify/fastify-csrf#readme",
-  "tsd": {
-    "directory": "./test"
-  },
   "dependencies": {
     "@fastify/csrf": "^5.1.0",
     "@fastify/error": "^3.0.0",

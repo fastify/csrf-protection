@@ -1,6 +1,6 @@
 /// <reference types="node" />
 
-import { FastifyPlugin, FastifyRequest } from 'fastify';
+import { FastifyPluginAsync, FastifyRequest } from 'fastify';
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -40,6 +40,6 @@ export interface FastifyCsrfOptions {
   sessionPlugin?: '@fastify/cookie' | '@fastify/session' | '@fastify/secure-session';
 }
 
-declare const fastifyCsrf: FastifyPlugin<FastifyCsrfOptions>;
+declare const fastifyCsrf: FastifyPluginAsync<FastifyCsrfOptions>;
 
 export default fastifyCsrf;
