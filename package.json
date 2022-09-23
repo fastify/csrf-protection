@@ -5,7 +5,8 @@
   "main": "index.js",
   "types": "types/index.d.ts",
   "scripts": {
-    "test": "standard && npm run test:unit && npm run test:typescript",
+    "lint": "standard",
+    "test": "npm run test:unit && npm run test:typescript",
     "test:unit": "tap",
     "test:typescript": "tsd"
   },
@@ -33,6 +34,7 @@
   },
   "devDependencies": {
     "@fastify/cookie": "^8.0.0",
+    "@fastify/pre-commit": "^2.0.2",
     "@fastify/secure-session": "^5.0.0",
     "@fastify/session": "^10.0.0",
     "@types/node": "^18.0.0",
@@ -42,5 +44,9 @@
     "standard": "^17.0.0",
     "tap": "^16.0.0",
     "tsd": "^0.24.1"
-  }
+  },
+  "pre-commit": [
+    "lint",
+    "test"
+  ]
 }
