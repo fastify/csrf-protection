@@ -5,7 +5,8 @@
   "main": "index.js",
   "types": "types/index.d.ts",
   "scripts": {
-    "test": "standard && tap --100 test/*.test.js && npm run test:typescript",
+    "test": "standard && npm run test:unit && npm run test:typescript",
+    "test:unit": "tap",
     "test:typescript": "tsd"
   },
   "repository": {
