@@ -11,6 +11,7 @@ const InvalidCSRFTokenError = createError('FST_CSRF_INVALID_TOKEN', 'Invalid csr
 const defaultOptions = {
   cookieKey: '_csrf',
   cookieOpts: { path: '/', sameSite: true, httpOnly: true },
+  csrfOpts: {},
   sessionKey: '_csrf',
   getToken: getTokenDefault,
   getUserInfo: getUserInfoDefault,
@@ -21,15 +22,15 @@ async function csrfPlugin (fastify, opts) {
   const {
     cookieKey,
     cookieOpts,
+    csrfOpts,
     sessionKey,
     getToken,
     getUserInfo,
     sessionPlugin
   } = Object.assign({}, defaultOptions, opts)
 
-  const csrfOpts = opts && opts.csrfOpts ? opts.csrfOpts : {}
-
   assert(typeof cookieKey === 'string', 'cookieKey should be a string')
+  assert(typeof csrfOpts === 'object', 'csrfOpts should be a object')
   assert(typeof sessionKey === 'string', 'sessionKey should be a string')
   assert(typeof getToken === 'function', 'getToken should be a function')
   assert(typeof getUserInfo === 'function', 'getUserInfo should be a function')
