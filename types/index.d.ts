@@ -1,6 +1,8 @@
 /// <reference types="node" />
 
 import { FastifyPluginAsync, FastifyRequest } from 'fastify';
+import { Options as CSRFOptions } from "@fastify/csrf";
+import { CookieSerializeOptions as FastifyCookieSerializeOptions } from "@fastify/cookie";
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -18,21 +20,12 @@ declare module 'fastify' {
   }
 }
 
-export interface CookieSerializeOptions {
-  domain?: string;
-  encode?(val: string): string;
-  expires?: Date;
-  httpOnly?: boolean;
-  maxAge?: number;
-  path?: string;
-  sameSite?: boolean | 'lax' | 'strict' | 'none';
-  secure?: boolean;
-  signed?: boolean;
-}
+export type CookieSerializeOptions = FastifyCookieSerializeOptions
 
 export type GetTokenFn = (req: FastifyRequest) => string | void;
 
 export interface FastifyCsrfOptions {
+  csrfOpts?: CSRFOptions;
   cookieKey?: string;
   cookieOpts?: CookieSerializeOptions;
   sessionKey?: string;

@@ -1,11 +1,13 @@
 import Fastify from 'fastify'
 import FastifyCookie from '@fastify/cookie'
-import FastifyCsrf from '..'
+import FastifyCsrfProtection from '..'
+import { expectError } from 'tsd'
 
-async function run () {
-  const fastify = Fastify()
+const fastify = Fastify()
+
+async function run() {
   await fastify.register(FastifyCookie)
-  await fastify.register(FastifyCsrf)
+  await fastify.register(FastifyCsrfProtection)
 
   fastify.route({
     method: 'GET',
@@ -24,3 +26,6 @@ async function run () {
     }
   })
 }
+
+fastify.register(FastifyCsrfProtection, { csrfOpts: { algorithm: 'sha1' } })
+expectError(fastify.register(FastifyCsrfProtection, { csrfOpts: { algorithm: 1 } }))
