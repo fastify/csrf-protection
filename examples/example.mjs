@@ -1,6 +1,6 @@
 import Fastify from 'fastify'
 import fastifyCookie from '@fastify/cookie'
-import fastifyCsrfProtection from './index.js'
+import fastifyCsrfProtection from '../index.js'
 
 const fastify = Fastify({
   logger: true
