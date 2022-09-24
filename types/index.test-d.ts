@@ -2,6 +2,7 @@ import Fastify from 'fastify'
 import FastifyCookie from '@fastify/cookie'
 import FastifyCsrfProtection from '..'
 import { expectError } from 'tsd'
+import FastifySession from '@fastify/session'
 
 const fastify = Fastify()
 
@@ -29,3 +30,9 @@ async function run() {
 
 fastify.register(FastifyCsrfProtection, { csrfOpts: { algorithm: 'sha1' } })
 expectError(fastify.register(FastifyCsrfProtection, { csrfOpts: { algorithm: 1 } }))
+
+fastify.register(FastifySession)
+fastify.register(FastifyCsrfProtection, { getUserInfo(req) {
+  return req.session.get('username')
+}})
+expectError(fastify.register(FastifyCsrfProtection, { getUserInfo: 'invalid' }))

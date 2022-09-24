@@ -29,6 +29,7 @@ export interface FastifyCsrfOptions {
   cookieKey?: string;
   cookieOpts?: CookieSerializeOptions;
   sessionKey?: string;
+  getUserInfo?: (req: FastifyRequest) => any;
   getToken?: GetTokenFn;
   sessionPlugin?: '@fastify/cookie' | '@fastify/session' | '@fastify/secure-session';
 }
