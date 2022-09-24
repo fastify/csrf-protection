@@ -56,6 +56,20 @@ async function csrfPlugin (fastify, opts) {
 
   fastify.decorate('csrfProtection', csrfProtection)
 
+  let getSecret
+
+  if (sessionPlugin === '@fastify/secure-session') {
+    getSecret = function getSecret (req, reply) { return req.session.get(sessionKey) }
+  } else if (sessionPlugin === '@fastify/session') {
+    getSecret = function getSecret (req, reply) { return req.session[sessionKey] }
+  } else {
+    getSecret = function getSecret (req, reply) {
+      return isCookieSigned
+        ? reply.unsignCookie(req.cookies[cookieKey] || '').value
+        : req.cookies[cookieKey]
+    }
+  }
+
   function generateCsrfCookie (opts) {
     let secret = isCookieSigned
       ? this.unsignCookie(this.request.cookies[cookieKey] || '').value
@@ -102,18 +116,6 @@ async function csrfPlugin (fastify, opts) {
       return reply.send(new InvalidCSRFTokenError())
     }
     next()
-  }
-
-  function getSecret (req, reply) {
-    if (sessionPlugin === '@fastify/secure-session') {
-      return req.session.get(sessionKey)
-    } else if (sessionPlugin === '@fastify/session') {
-      return req.session[sessionKey]
-    } else {
-      return isCookieSigned
-        ? reply.unsignCookie(req.cookies[cookieKey] || '').value
-        : req.cookies[cookieKey]
-    }
   }
 }
 
