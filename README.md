@@ -15,7 +15,7 @@ We do not claim that this module is able to protect an application without a cle
 @fastify/csrf-protection provides a series of utilities that developers can use to secure their application.
 We recommend using [@fastify/helmet](https://github.com/fastify/fastify-helmet) to implement some of those mitigations.
 
-Security is always a tradeoff between risk mitigation, functionality, and developer experience.
+Security is always a tradeoff between risk mitigation, functionality, performance, and developer experience.
 As a result we will not consider a report of a plugin default configuration option as security
 vulnerability that might be unsafe in certain scenarios as long as this module provides a
 way to provide full mitigation through configuration.
@@ -32,7 +32,7 @@ npm i @fastify/csrf-protection
 
 If you use `@fastify/csrf-protection` with `@fastify/cookie`, the CSRF secret will be added to the response cookies.
 By default, the cookie used will be named `_csrf`, but you can rename it via the `cookieKey` option.
-When `cookieOpts` are provided, they **override** the default options. Make sure you restore any of the default options which provide sensible and secure defaults.
+When `cookieOpts` are provided, they **override** the default cookie options. Make sure you restore any of the default options which provide sensible and secure defaults.
 
 ```js
 fastify.register(require('@fastify/cookie'))
@@ -128,11 +128,11 @@ fastify.route({
 The `secret` shown in the code above is strictly just an example. In all cases, you would need to make sure that the `secret` is:
 - **Never** hard-coded in the code or `.env` files or anywhere in the repository
 - Stored in some external services like KMS, Vault or something similar
-- Read at run-time and supplied in this option
+- Read at run-time and supplied to this option
 - Of significant character length to provide adequate entropy
 - Truly random sequence of characters (You could use [crypto-random-string](http://npm.im/crypto-random-string))
 
-Apart from these safeguards, it is extremely important to [use HTTPS for your website/app](https://letsencrypt.org/) to avoid a bunch of other potential security issues like [MITM](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) etc.
+Apart from these safeguards, it is extremely important to [use HTTPS for your website/app](https://letsencrypt.org/) to avoid a bunch of other potential security issues like [MITM attacks](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) etc.
 
 ## API
 
@@ -146,11 +146,11 @@ Apart from these safeguards, it is extremely important to [use HTTPS for your we
 | `getToken` |  A sync function to get the CSRF secret from the request.     |
 | `getUserInfo` |  A sync function to get the a string of user-specific information to prevent cookie tossing.     |
 | `sessionPlugin` |  The session plugin that you are using (if applicable).     |
-| `csrfOpts` |  The csrf options. See  [csrf](https://github.com/pillarjs/csrf).     |
+| `csrfOpts` |  The csrf options. See  [@fastify/csrf](https://github.com/fastify/csrf).     |
 
 ### `reply.generateCsrf([opts])`
 
-Generates a secret (if is not already present) and returns a promise that resolves to the associated secret.
+Generates a secret (if it is not already present) and returns a promise that resolves to the associated secret.
 
 ```js
 const token = await reply.generateCsrf()
@@ -165,11 +165,11 @@ This option is needed to protect against cookie tossing.
 ### `fastify.csrfProtection(request, reply, next)`
 
 A hook that you can use for protecting routes or entire plugins from CSRF attacks.
-Generally, we recommend to use the `onRequest` hook, but if you are sending the token
-via the body, then you should use `preValidation` or `preHandler`.
+Generally, we recommend using an `onRequest` hook, but if you are sending the token
+via the request body, then you must use a `preValidation` or `preHandler` hook.
 
 ```js
-// protect the entire plugin
+// protect the fastify instance
 fastify.addHook('onRequest', fastify.csrfProtection)
 
 // protect a single route
@@ -195,10 +195,11 @@ function getToken (req) {
 }
 ```
 
-We must use the `preHandler` lifecycle if we want to accept CSRF tokens
-inside request bodies. The default property matched is `_csrf`, but it's possible
-to constumize this by chainging the `getToken` function.
-If we are using headers, using the `onRequest` lifecycle is sufficient and safer.
+It is recommended to provide a custom `getToken` function for performance and [security](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#use-of-custom-request-headers) reasons.
+
+```js
+fastify.register(require('@fastify/csrf-protection'), { getToken: function (req) { req.headers['csrf'] } })
+```
 
 ## License
 
