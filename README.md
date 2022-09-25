@@ -15,7 +15,7 @@ We do not claim that this module is able to protect an application without a cle
 @fastify/csrf-protection provides a series of utilities that developers can use to secure their application.
 We recommend using [@fastify/helmet](https://github.com/fastify/fastify-helmet) to implement some of those mitigations.
 
-Security is always a tradeoff between risk mitigation, functionality, performance and developer experience.
+Security is always a tradeoff between risk mitigation, functionality, performance, and developer experience.
 As a result we will not consider a report of a plugin default configuration option as security
 vulnerability that might be unsafe in certain scenarios as long as this module provides a
 way to provide full mitigation through configuration.
@@ -165,7 +165,7 @@ This option is needed to protect against cookie tossing.
 ### `fastify.csrfProtection(request, reply, next)`
 
 A hook that you can use for protecting routes or entire plugins from CSRF attacks.
-Generally, we recommend to use a `onRequest` hook, but if you are sending the token
+Generally, we recommend using an `onRequest` hook, but if you are sending the token
 via the request body, then you must use a `preValidation` or `preHandler` hook.
 
 ```js
