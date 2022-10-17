@@ -198,7 +198,16 @@ function getToken (req) {
 It is recommended to provide a custom `getToken` function for performance and [security](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#use-of-custom-request-headers) reasons.
 
 ```js
-fastify.register(require('@fastify/csrf-protection'), { getToken: function (req) { req.headers['csrf'] } })
+fastify.register(require('@fastify/csrf-protection'), 
+  { getToken: function (req) { return req.headers['csrf-token'] } }
+)
+```
+or
+
+```js
+fastify.register(require('@fastify/csrf-protection'), 
+  { getToken: (req) => req.headers['csrf-token'] }
+)
 ```
 
 ## License
