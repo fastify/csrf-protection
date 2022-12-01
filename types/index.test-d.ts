@@ -1,7 +1,7 @@
 import Fastify from 'fastify'
 import FastifyCookie from '@fastify/cookie'
-import FastifyCsrfProtection from '..'
-import { expectError } from 'tsd'
+import FastifyCsrfProtection, { FastifyCsrfOptions } from '..'
+import { expectError, expectDeprecated } from 'tsd'
 import FastifySession from '@fastify/session'
 
 const fastify = Fastify()
@@ -38,3 +38,4 @@ fastify.register(FastifyCsrfProtection, { getUserInfo(req) {
 }})
 expectError(fastify.register(FastifyCsrfProtection, { getUserInfo: 'invalid' }))
 
+expectDeprecated({} as FastifyCsrfOptions)

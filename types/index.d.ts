@@ -15,25 +15,37 @@ declare module 'fastify' {
      * @param options Serialize options
      */
     generateCsrf(
-      options?: CookieSerializeOptions
+      options?: fastifyCsrfProtection.CookieSerializeOptions
     ): FastifyReply;
   }
 }
 
-export type CookieSerializeOptions = FastifyCookieSerializeOptions
+type FastifyCsrfProtection = FastifyPluginAsync<fastifyCsrfProtection.FastifyCsrfOptions>;
 
-export type GetTokenFn = (req: FastifyRequest) => string | void;
+declare namespace fastifyCsrfProtection {
+  export type CookieSerializeOptions = FastifyCookieSerializeOptions
 
-export interface FastifyCsrfOptions {
-  csrfOpts?: CSRFOptions;
-  cookieKey?: string;
-  cookieOpts?: CookieSerializeOptions;
-  sessionKey?: string;
-  getUserInfo?: (req: FastifyRequest) => string;
-  getToken?: GetTokenFn;
-  sessionPlugin?: '@fastify/cookie' | '@fastify/session' | '@fastify/secure-session';
+  export type GetTokenFn = (req: FastifyRequest) => string | void;
+  
+  export interface FastifyCsrfProtectionOptions {
+    csrfOpts?: CSRFOptions;
+    cookieKey?: string;
+    cookieOpts?: CookieSerializeOptions;
+    sessionKey?: string;
+    getUserInfo?: (req: FastifyRequest) => string;
+    getToken?: GetTokenFn;
+    sessionPlugin?: '@fastify/cookie' | '@fastify/session' | '@fastify/secure-session';
+  }
+
+  /**
+   * @deprecated Use FastifyCsrfProtectionOptions instead
+   */
+  export type FastifyCsrfOptions = FastifyCsrfProtectionOptions;
+
+  export const fastifyCsrfProtection: FastifyCsrfProtection
+  export { fastifyCsrfProtection as default }
 }
 
-declare const fastifyCsrf: FastifyPluginAsync<FastifyCsrfOptions>;
 
-export default fastifyCsrf;
+declare function fastifyCsrfProtection(...params: Parameters<FastifyCsrfProtection>): ReturnType<FastifyCsrfProtection>
+export = fastifyCsrfProtection

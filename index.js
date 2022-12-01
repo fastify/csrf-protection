@@ -17,7 +17,7 @@ const defaultOptions = {
   sessionPlugin: '@fastify/cookie'
 }
 
-async function csrfPlugin (fastify, opts) {
+async function fastifyCsrfProtection (fastify, opts) {
   const {
     cookieKey,
     cookieOpts,
@@ -131,7 +131,9 @@ function getUserInfoDefault (req) {
   return undefined
 }
 
-module.exports = fp(csrfPlugin, {
+module.exports = fp(fastifyCsrfProtection, {
   fastify: '4.x',
   name: '@fastify/csrf-protection'
 })
+module.exports.default = fastifyCsrfProtection
+module.exports.fastifyCsrfProtection = fastifyCsrfProtection
