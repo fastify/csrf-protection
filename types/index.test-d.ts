@@ -1,7 +1,7 @@
 import Fastify from 'fastify'
 import FastifyCookie from '@fastify/cookie'
 import FastifyCsrfProtection, { FastifyCsrfOptions } from '..'
-import { expectError, expectDeprecated } from 'tsd'
+import { expectError, expectDeprecated, expectType } from 'tsd'
 import FastifySession from '@fastify/session'
 
 const fastify = Fastify()
@@ -14,7 +14,9 @@ async function run() {
     method: 'GET',
     url: '/',
     handler: async (req, reply) => {
-      return reply.generateCsrf()
+      const token = reply.generateCsrf()
+      expectType<string>(token)
+      return token
     }
   })
 
