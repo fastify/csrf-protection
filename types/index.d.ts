@@ -16,7 +16,7 @@ declare module 'fastify' {
      */
     generateCsrf(
       options?: fastifyCsrfProtection.CookieSerializeOptions
-    ): FastifyReply;
+    ): string;
   }
 }
 
