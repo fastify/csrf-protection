@@ -41,6 +41,7 @@ async function fastifyCsrfProtection (fastify, opts) {
 
   if (opts.getUserInfo) {
     csrfOpts.userInfo = true
+    assert(csrfOpts.hmacKey, 'csrfOpts.hmacKey is required and must be a valid hmac key')
   }
   const tokens = new CSRF(csrfOpts)
 

@@ -17,6 +17,9 @@ test('Cookies with User-Info', async t => {
   await fastify.register(fastifyCsrf, {
     getUserInfo (req) {
       return userInfoDB[req.body.username]
+    },
+    csrfOpts: {
+      hmacKey: 'foo'
     }
   })
 
@@ -73,6 +76,9 @@ test('Session with User-Info', async t => {
     sessionPlugin: '@fastify/session',
     getUserInfo (req) {
       return req.session.username
+    },
+    csrfOpts: {
+      hmacKey: 'foo'
     }
   })
 
@@ -122,6 +128,9 @@ test('SecureSession with User-Info', async t => {
     sessionPlugin: '@fastify/secure-session',
     getUserInfo (req) {
       return req.session.get('username')
+    },
+    csrfOpts: {
+      hmacKey: 'foo'
     }
   })
 
@@ -162,4 +171,22 @@ test('SecureSession with User-Info', async t => {
   })
 
   t.equal(response2.statusCode, 200)
+})
+
+test('Validate presence of hmac key with User-Info', async (t) => {
+  const fastify = Fastify()
+  await fastify.register(fastifySecureSession, {
+    key,
+    cookie: { path: '/', secure: false }
+  })
+
+  t.rejects(fastify.register(fastifyCsrf, {
+    getUserInfo (req) {
+      return req.session.get('username')
+    },
+    csrfOpts: {
+      hmacKey: undefined
+    }
+  })
+  )
 })
