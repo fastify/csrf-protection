@@ -17,7 +17,11 @@ test('Cookies', t => {
   async function load () {
     const fastify = Fastify()
     await fastify.register(fastifyCookie)
-    await fastify.register(fastifyCsrf)
+    await fastify.register(fastifyCsrf, {
+      csrfOpts: {
+        hmacKey: 'foo'
+      }
+    })
     fastify.decorate('testType', 'fastify-cookie')
     return fastify
   }
@@ -52,7 +56,12 @@ test('Cookies signed', t => {
   async function load () {
     const fastify = Fastify()
     await fastify.register(fastifyCookie, { secret: 'supersecret' })
-    await fastify.register(fastifyCsrf, { cookieOpts: { signed: true } })
+    await fastify.register(fastifyCsrf, {
+      cookieOpts: { signed: true },
+      csrfOpts: {
+        hmacKey: 'foo'
+      }
+    })
     fastify.decorate('testType', 'fastify-cookie')
     return fastify
   }
@@ -153,6 +162,16 @@ test('Validation', t => {
     })
   })
 
+  t.test('hmacKey', t => {
+    t.plan(1)
+    const fastify = Fastify()
+    fastify.register(fastifyCookie)
+    fastify.register(fastifyCsrf)
+    fastify.ready(err => {
+      t.equal(err.message, 'csrfOpts.hmacKey is required')
+    })
+  })
+
   t.end()
 })
 
@@ -165,7 +184,7 @@ test('csrf options', async () => {
     }
   })
 
-  const csrfOpts = { some: 'options' }
+  const csrfOpts = { some: 'options', hmacKey: 'foo' }
 
   await Fastify()
     .register(fastifyCookie)

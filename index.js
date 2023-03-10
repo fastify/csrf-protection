@@ -41,7 +41,7 @@ async function fastifyCsrfProtection (fastify, opts) {
 
   if (opts.getUserInfo) {
     csrfOpts.userInfo = true
-    assert(csrfOpts.hmacKey, 'csrfOpts.hmacKey is required and must be a valid hmac key')
+    checkHmacKey(csrfOpts.hmacKey)
   }
   const tokens = new CSRF(csrfOpts)
 
@@ -52,6 +52,7 @@ async function fastifyCsrfProtection (fastify, opts) {
   } else if (sessionPlugin === '@fastify/session') {
     fastify.decorateReply('generateCsrf', generateCsrfSession)
   } else {
+    checkHmacKey(csrfOpts.hmacKey)
     fastify.decorateReply('generateCsrf', generateCsrfCookie)
   }
 
@@ -130,6 +131,10 @@ function getTokenDefault (req) {
 
 function getUserInfoDefault (req) {
   return undefined
+}
+
+function checkHmacKey (hmacKey) {
+  assert(hmacKey, 'csrfOpts.hmacKey is required')
 }
 
 module.exports = fp(fastifyCsrfProtection, {
