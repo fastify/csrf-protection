@@ -1,6 +1,6 @@
 {
   "name": "@fastify/csrf-protection",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "description": "A plugin for adding CSRF protection to Fastify.",
   "main": "index.js",
   "types": "index.d.ts",
