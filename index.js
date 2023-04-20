@@ -42,6 +42,11 @@ async function fastifyCsrfProtection (fastify, opts) {
   if (opts.getUserInfo) {
     csrfOpts.userInfo = true
   }
+
+  if (sessionPlugin === '@fastify/cookie' && csrfOpts.userInfo) {
+    assert(csrfOpts.hmacKey, 'csrfOpts.hmacKey is required')
+  }
+
   const tokens = new CSRF(csrfOpts)
 
   const isCookieSigned = cookieOpts && cookieOpts.signed

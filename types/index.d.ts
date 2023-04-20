@@ -26,16 +26,35 @@ declare namespace fastifyCsrfProtection {
   export type CookieSerializeOptions = FastifyCookieSerializeOptions
 
   export type GetTokenFn = (req: FastifyRequest) => string | void;
-  
-  export interface FastifyCsrfProtectionOptions {
-    csrfOpts?: CSRFOptions;
+
+  interface FastifyCsrfProtectionOptionsBase {
     cookieKey?: string;
     cookieOpts?: CookieSerializeOptions;
     sessionKey?: string;
     getUserInfo?: (req: FastifyRequest) => string;
     getToken?: GetTokenFn;
-    sessionPlugin?: '@fastify/cookie' | '@fastify/session' | '@fastify/secure-session';
   }
+
+  interface FastifyCsrfProtectionOptionsFastifyCookie {
+    sessionPlugin?: '@fastify/cookie';
+    csrfOpts: Omit<CSRFOptions, 'hmacKey'> & Required<Pick<CSRFOptions, 'hmacKey'>>;
+  }
+
+  interface FastifyCsrfProtectionOptionsFastifySession {
+    sessionPlugin: '@fastify/session';
+    csrfOpts?: CSRFOptions;
+  }
+
+  interface FastifyCsrfProtectionOptionsFastifySecureSession {
+    sessionPlugin: '@fastify/secure-session';
+    csrfOpts?: CSRFOptions;
+  }
+
+  export type FastifyCsrfProtectionOptions = FastifyCsrfProtectionOptionsBase & (
+    FastifyCsrfProtectionOptionsFastifyCookie |
+    FastifyCsrfProtectionOptionsFastifySession |
+    FastifyCsrfProtectionOptionsFastifySecureSession
+  )
 
   /**
    * @deprecated Use FastifyCsrfProtectionOptions instead

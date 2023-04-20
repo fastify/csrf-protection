@@ -161,6 +161,7 @@ You can also pass the [cookie serialization](https://github.com/fastify/fastify-
 The option `userInfo` is required if `getUserInfo` has been specified in the module option.
 The provided `userInfo` is hashed  inside the csrf token and it is not directly exposed.
 This option is needed to protect against cookie tossing.
+The option `csrfOpts.hmacKey` is required if `getUserInfo` has been specified in the module option in combination with using [@fastify/cookie](https://github.com/fastify/fastify-cookie) as sessionPlugin
 
 ### `fastify.csrfProtection(request, reply, next)`
 
