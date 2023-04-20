@@ -6,6 +6,7 @@ async function run () {
   const fastify = Fastify()
   await fastify.register(FastifyCookie)
   await fastify.register(FastifyCsrf)
+  fastify.register(FastifyCsrf, { csrfOpts: { hmacKey: 'hmac' } })
 
   fastify.route({
     method: 'GET',

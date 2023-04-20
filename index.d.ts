@@ -38,6 +38,11 @@ export interface FastifyCsrfOptions {
   sessionKey?: string;
   getToken?: GetTokenFn;
   sessionPlugin?: '@fastify/cookie' | '@fastify/session' | '@fastify/secure-session';
+  csrfOpts: CSRFOptions;
+}
+
+export interface CSRFOptions {
+  hmacKey: string;
 }
 
 declare const fastifyCsrf: FastifyPlugin<FastifyCsrfOptions>;
