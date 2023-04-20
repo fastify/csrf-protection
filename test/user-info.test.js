@@ -17,6 +17,9 @@ test('Cookies with User-Info', async t => {
   await fastify.register(fastifyCsrf, {
     getUserInfo (req) {
       return userInfoDB[req.body.username]
+    },
+    csrfOpts: {
+      hmacKey: 'foo'
     }
   })
 
@@ -73,6 +76,9 @@ test('Session with User-Info', async t => {
     sessionPlugin: '@fastify/session',
     getUserInfo (req) {
       return req.session.username
+    },
+    csrfOpts: {
+      hmacKey: 'foo'
     }
   })
 
@@ -122,6 +128,9 @@ test('SecureSession with User-Info', async t => {
     sessionPlugin: '@fastify/secure-session',
     getUserInfo (req) {
       return req.session.get('username')
+    },
+    csrfOpts: {
+      hmacKey: 'foo'
     }
   })
 
@@ -162,4 +171,83 @@ test('SecureSession with User-Info', async t => {
   })
 
   t.equal(response2.statusCode, 200)
+})
+
+test('Validate presence of hmac key with User-Info /1', async (t) => {
+  const fastify = Fastify()
+  await fastify.register(fastifyCookie)
+
+  await t.rejects(fastify.register(fastifyCsrf, {
+    getUserInfo (req) {
+      return req.session.get('username')
+    }
+  }), Error('csrfOpts.hmacKey is required'))
+})
+
+test('Validate presence of hmac key with User-Info /2', async (t) => {
+  const fastify = Fastify()
+  await fastify.register(fastifyCookie)
+
+  await t.rejects(fastify.register(fastifyCsrf, {
+    getUserInfo (req) {
+      return req.session.get('username')
+    },
+    sessionPlugin: '@fastify/cookie'
+  }), Error('csrfOpts.hmacKey is required'))
+})
+
+test('Validate presence of hmac key with User-Info /3', async (t) => {
+  const fastify = Fastify()
+  await fastify.register(fastifyCookie)
+
+  await t.rejects(fastify.register(fastifyCsrf, {
+    getUserInfo (req) {
+      return req.session.get('username')
+    },
+    csrfOpts: {
+      hmacKey: undefined
+    }
+  }), Error('csrfOpts.hmacKey is required'))
+})
+
+test('Validate presence of hmac key with User-Info /4', async (t) => {
+  const fastify = Fastify()
+  await fastify.register(fastifyCookie)
+
+  await t.rejects(fastify.register(fastifyCsrf, {
+    getUserInfo (req) {
+      return req.session.get('username')
+    },
+    sessionPlugin: '@fastify/cookie',
+    csrfOpts: {
+      hmacKey: undefined
+    }
+  }), Error('csrfOpts.hmacKey is required'))
+})
+
+test('Validate presence of hmac key with User-Info /5', async (t) => {
+  const fastify = Fastify()
+  await fastify.register(fastifySecureSession, { key, cookie: { path: '/', secure: false } })
+
+  await t.resolves(fastify.register(fastifyCsrf, {
+    getUserInfo (req) {
+      return req.session.get('username')
+    },
+    sessionPlugin: '@fastify/secure-session'
+  }))
+})
+
+test('Validate presence of hmac key with User-Info /6', async (t) => {
+  const fastify = Fastify()
+  await fastify.register(fastifySecureSession, { key, cookie: { path: '/', secure: false } })
+
+  await t.resolves(fastify.register(fastifyCsrf, {
+    getUserInfo (req) {
+      return req.session.get('username')
+    },
+    sessionPlugin: '@fastify/secure-session',
+    csrfOpts: {
+      hmacKey: 'foo'
+    }
+  }))
 })
