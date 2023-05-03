@@ -6,6 +6,12 @@ import FastifySession from '@fastify/session'
 
 const fastify = Fastify()
 
+declare module 'fastify' {
+  interface Session {
+    username: string
+  }
+}
+
 async function run() {
   await fastify.register(FastifyCookie)
   await fastify.register(FastifyCsrfProtection)
@@ -40,7 +46,7 @@ fastify.register(FastifyCsrfProtection, {
     hmacKey: '123'
   },
   getUserInfo(req) {
-    return req.session.get('username')
+    return req.session.get<'username', string>('username')
   }
 })
 expectError(fastify.register(FastifyCsrfProtection, { getUserInfo: 'invalid' }))
