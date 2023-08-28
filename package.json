@@ -35,7 +35,7 @@
   "devDependencies": {
     "@fastify/cookie": "^9.0.4",
     "@fastify/pre-commit": "^2.0.2",
-    "@fastify/secure-session": "^6.0.0",
+    "@fastify/secure-session": "^7.0.0",
     "@fastify/session": "^10.3.0",
     "@types/node": "^20.1.0",
     "fastify": "^4.2.0",
