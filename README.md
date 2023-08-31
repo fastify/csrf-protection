@@ -69,7 +69,7 @@ If you use `@fastify/csrf-protection` with `@fastify/session`, the CSRF secret w
 By default, the key used will be named `_csrf`, but you can rename it via the `sessionKey` option.
 
 ```js
-fastify.register(require('@fastify-session'))
+fastify.register(require('@fastify-session'), { secret: "a string which is longer than 32 characters" })
 fastify.register(require('@fastify/csrf-protection'), { sessionPlugin: '@fastify/session' })
 
 // generate a token
@@ -99,7 +99,7 @@ If you use `@fastify/csrf-protection` with `@fastify/secure-session`, the CSRF s
 By default, the key used will be named `_csrf`, but you can rename it via the `sessionKey` option.
 
 ```js
-fastify.register(require('@fastify/secure-session'))
+fastify.register(require('@fastify/secure-session'), { secret: "a string which is longer than 32 characters" })
 fastify.register(require('@fastify/csrf-protection'), { sessionPlugin: '@fastify/secure-session' })
 
 // generate a token
