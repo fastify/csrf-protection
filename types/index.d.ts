@@ -37,7 +37,16 @@ declare namespace fastifyCsrfProtection {
 
   interface FastifyCsrfProtectionOptionsFastifyCookie {
     sessionPlugin?: '@fastify/cookie';
-    csrfOpts: Omit<CSRFOptions, 'hmacKey'> & Required<Pick<CSRFOptions, 'hmacKey'>>;
+    csrfOpts?: | ({
+      [k in keyof CSRFOptions]: k extends "userInfo"
+        ? true
+        : CSRFOptions[k];
+    } & Required<Pick<CSRFOptions, "hmacKey">>)
+  | ({
+      [k in keyof CSRFOptions]: k extends "userInfo"
+        ? false
+        : CSRFOptions[k];
+    });
   }
 
   interface FastifyCsrfProtectionOptionsFastifySession {
