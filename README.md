@@ -28,7 +28,7 @@ npm i @fastify/csrf-protection
 ## Usage
 
 
-### Use with [`@fastify/cookie`](https://github.com/fastify/@fastify/cookie)
+### Use with [`@fastify/cookie`](https://github.com/fastify/fastify-cookie)
 
 If you use `@fastify/csrf-protection` with `@fastify/cookie`, the CSRF secret will be added to the response cookies.
 By default, the cookie used will be named `_csrf`, but you can rename it via the `cookieKey` option.
@@ -130,7 +130,7 @@ The `secret` shown in the code above is strictly just an example. In all cases, 
 - Stored in some external services like KMS, Vault or something similar
 - Read at run-time and supplied to this option
 - Of significant character length to provide adequate entropy
-- Truly random sequence of characters (You could use [crypto-random-string](http://npm.im/crypto-random-string))
+- Truly random sequence of characters (You could use [crypto-random-string](https://npm.im/crypto-random-string))
 
 Apart from these safeguards, it is extremely important to [use HTTPS for your website/app](https://letsencrypt.org/) to avoid a bunch of other potential security issues like [MITM attacks](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) etc.
 
