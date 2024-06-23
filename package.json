@@ -31,7 +31,7 @@
   "dependencies": {
     "@fastify/csrf": "^7.0.0-pre.fv5.1",
     "@fastify/error": "^4.0.0",
-    "fastify-plugin": "^4.5.1"
+    "fastify-plugin": "^5.0.0-pre.fv5.1"
   },
   "devDependencies": {
     "@fastify/cookie": "^9.3.1",
