@@ -177,10 +177,16 @@ test('Validate presence of hmac key with User-Info /1', async (t) => {
   const fastify = Fastify()
   await fastify.register(fastifyCookie)
 
-  await t.rejects(fastify.register(fastifyCsrf, {
-    getUserInfo (req) {
-      return req.session.get('username')
-    }
+  await t.rejects(new Promise((resolve, reject) => {
+    fastify.register(fastifyCsrf, {
+      getUserInfo (req) {
+        return req.session.get('username')
+      }
+    }).then(() => {
+      resolve()
+    }).catch(err => {
+      reject(err)
+    })
   }), Error('csrfOpts.hmacKey is required'))
 })
 
@@ -188,11 +194,17 @@ test('Validate presence of hmac key with User-Info /2', async (t) => {
   const fastify = Fastify()
   await fastify.register(fastifyCookie)
 
-  await t.rejects(fastify.register(fastifyCsrf, {
-    getUserInfo (req) {
-      return req.session.get('username')
-    },
-    sessionPlugin: '@fastify/cookie'
+  await t.rejects(new Promise((resolve, reject) => {
+    fastify.register(fastifyCsrf, {
+      getUserInfo (req) {
+        return req.session.get('username')
+      },
+      sessionPlugin: '@fastify/cookie'
+    }).then(() => {
+      resolve()
+    }).catch(err => {
+      reject(err)
+    })
   }), Error('csrfOpts.hmacKey is required'))
 })
 
@@ -200,13 +212,19 @@ test('Validate presence of hmac key with User-Info /3', async (t) => {
   const fastify = Fastify()
   await fastify.register(fastifyCookie)
 
-  await t.rejects(fastify.register(fastifyCsrf, {
-    getUserInfo (req) {
-      return req.session.get('username')
-    },
-    csrfOpts: {
-      hmacKey: undefined
-    }
+  await t.rejects(new Promise((resolve, reject) => {
+    fastify.register(fastifyCsrf, {
+      getUserInfo (req) {
+        return req.session.get('username')
+      },
+      csrfOpts: {
+        hmacKey: undefined
+      }
+    }).then(() => {
+      resolve()
+    }).catch(err => {
+      reject(err)
+    })
   }), Error('csrfOpts.hmacKey is required'))
 })
 
@@ -214,14 +232,20 @@ test('Validate presence of hmac key with User-Info /4', async (t) => {
   const fastify = Fastify()
   await fastify.register(fastifyCookie)
 
-  await t.rejects(fastify.register(fastifyCsrf, {
-    getUserInfo (req) {
-      return req.session.get('username')
-    },
-    sessionPlugin: '@fastify/cookie',
-    csrfOpts: {
-      hmacKey: undefined
-    }
+  await t.rejects(new Promise((resolve, reject) => {
+    fastify.register(fastifyCsrf, {
+      getUserInfo (req) {
+        return req.session.get('username')
+      },
+      sessionPlugin: '@fastify/cookie',
+      csrfOpts: {
+        hmacKey: undefined
+      }
+    }).then(() => {
+      resolve()
+    }).catch(err => {
+      reject(err)
+    })
   }), Error('csrfOpts.hmacKey is required'))
 })
 
@@ -229,11 +253,17 @@ test('Validate presence of hmac key with User-Info /5', async (t) => {
   const fastify = Fastify()
   await fastify.register(fastifySecureSession, { key, cookie: { path: '/', secure: false } })
 
-  await t.resolves(fastify.register(fastifyCsrf, {
-    getUserInfo (req) {
-      return req.session.get('username')
-    },
-    sessionPlugin: '@fastify/secure-session'
+  await t.resolves(new Promise((resolve, reject) => {
+    fastify.register(fastifyCsrf, {
+      getUserInfo (req) {
+        return req.session.get('username')
+      },
+      sessionPlugin: '@fastify/secure-session'
+    }).then(() => {
+      resolve()
+    }).catch(err => {
+      reject(err)
+    })
   }))
 })
 
@@ -241,13 +271,19 @@ test('Validate presence of hmac key with User-Info /6', async (t) => {
   const fastify = Fastify()
   await fastify.register(fastifySecureSession, { key, cookie: { path: '/', secure: false } })
 
-  await t.resolves(fastify.register(fastifyCsrf, {
-    getUserInfo (req) {
-      return req.session.get('username')
-    },
-    sessionPlugin: '@fastify/secure-session',
-    csrfOpts: {
-      hmacKey: 'foo'
-    }
+  await t.resolves(new Promise((resolve, reject) => {
+    fastify.register(fastifyCsrf, {
+      getUserInfo (req) {
+        return req.session.get('username')
+      },
+      sessionPlugin: '@fastify/secure-session',
+      csrfOpts: {
+        hmacKey: 'foo'
+      }
+    }).then(() => {
+      resolve()
+    }).catch(err => {
+      reject(err)
+    })
   }))
 })

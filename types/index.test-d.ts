@@ -46,7 +46,12 @@ fastify.register(FastifyCsrfProtection, {
     hmacKey: '123'
   },
   getUserInfo(req) {
-    return req.session.get<'username', string>('username')
+    const info = req.session.get('username')
+    if (info) {
+      return info
+    } else {
+      throw new Error('No user info')
+    }
   }
 })
 expectError(fastify.register(FastifyCsrfProtection, { getUserInfo: 'invalid' }))
