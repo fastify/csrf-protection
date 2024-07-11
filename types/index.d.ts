@@ -6,7 +6,7 @@ import { CookieSerializeOptions as FastifyCookieSerializeOptions } from "@fastif
 
 declare module 'fastify' {
   interface FastifyInstance {
-    csrfProtection(req: FastifyRequest, reply: FastifyReply, done: () => void): any;
+    csrfProtection(req: FastifyRequest, reply: FastifyReply, done: () => void): void;
   }
 
   interface FastifyReply {

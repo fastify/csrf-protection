@@ -34,6 +34,8 @@ async function run() {
       return req.body
     }
   })
+  
+  fastify.addHook('onRequest', fastify.csrfProtection)
 }
 
 
