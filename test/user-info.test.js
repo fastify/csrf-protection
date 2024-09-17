@@ -28,7 +28,7 @@ test('Cookies with User-Info', async t => {
   }
 
   fastify.post('/login', async (req, reply) => {
-    const token = await reply.generateCsrf({ userInfo: userInfoDB[req.body.username] })
+    const token = reply.generateCsrf({ userInfo: userInfoDB[req.body.username] })
     return { token }
   })
 
@@ -84,7 +84,7 @@ test('Session with User-Info', async t => {
 
   fastify.post('/login', async (req, reply) => {
     req.session.username = req.body.username
-    const token = await reply.generateCsrf({ userInfo: req.body.username })
+    const token = reply.generateCsrf({ userInfo: req.body.username })
     return { token }
   })
 
@@ -136,7 +136,7 @@ test('SecureSession with User-Info', async t => {
 
   fastify.post('/login', async (req, reply) => {
     req.session.set('username', req.body.username)
-    const token = await reply.generateCsrf({ userInfo: req.body.username })
+    const token = reply.generateCsrf({ userInfo: req.body.username })
     return { token }
   })
 
