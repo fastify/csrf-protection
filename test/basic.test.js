@@ -32,7 +32,7 @@ test('Cookies', t => {
     const fastify = await load()
 
     fastify.get('/', async (req, reply) => {
-      const token = await reply.generateCsrf()
+      const token = reply.generateCsrf()
       return { token }
     })
 
@@ -179,7 +179,7 @@ function runTest (t, load, tkn, hook = 'onRequest') {
     const fastify = await load()
 
     fastify.get('/', async (req, reply) => {
-      const token = await reply.generateCsrf()
+      const token = reply.generateCsrf()
       return { token }
     })
 
@@ -274,7 +274,7 @@ function runCookieOpts (t, load) {
     const fastify = await load()
 
     fastify.get('/', async (req, reply) => {
-      const token = await reply.generateCsrf({ path: '/hello' })
+      const token = reply.generateCsrf({ path: '/hello' })
       return { token }
     })
 

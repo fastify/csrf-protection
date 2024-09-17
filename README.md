@@ -47,7 +47,7 @@ fastify.route({
   method: 'GET',
   path: '/',
   handler: async (req, reply) => {
-    const token = await reply.generateCsrf()
+    const token = reply.generateCsrf()
     return { token }
   }
 })
@@ -77,7 +77,7 @@ fastify.route({
   method: 'GET',
   path: '/',
   handler: async (req, reply) => {
-    const token = await reply.generateCsrf()
+    const token = reply.generateCsrf()
     return { token }
   }
 })
@@ -107,7 +107,7 @@ fastify.route({
   method: 'GET',
   path: '/',
   handler: async (req, reply) => {
-    const token = await reply.generateCsrf()
+    const token = reply.generateCsrf()
     return { token }
   }
 })
@@ -153,7 +153,7 @@ Apart from these safeguards, it is extremely important to [use HTTPS for your we
 Generates a secret (if it is not already present) and returns a promise that resolves to the associated secret.
 
 ```js
-const token = await reply.generateCsrf()
+const token = reply.generateCsrf()
 ```
 
 You can also pass the [cookie serialization](https://github.com/fastify/fastify-cookie) options to the function.

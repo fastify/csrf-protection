@@ -24,7 +24,7 @@ fastify.route({
   method: 'GET',
   url: '/',
   handler: async (req, reply) => {
-    const token = await reply.generateCsrf()
+    const token = reply.generateCsrf()
     reply.type('text/html')
 
     return `
