@@ -14,7 +14,8 @@ const defaultOptions = {
   sessionKey: '_csrf',
   getToken: getTokenDefault,
   getUserInfo: getUserInfoDefault,
-  sessionPlugin: '@fastify/cookie'
+  sessionPlugin: '@fastify/cookie',
+  protectedMethods: ['POST', 'PUT', 'PATCH', 'DELETE']
 }
 
 async function fastifyCsrfProtection (fastify, opts) {
@@ -24,7 +25,8 @@ async function fastifyCsrfProtection (fastify, opts) {
     sessionKey,
     getToken,
     getUserInfo,
-    sessionPlugin
+    sessionPlugin,
+    protectedMethods
   } = Object.assign({}, defaultOptions, opts)
 
   const csrfOpts = opts && opts.csrfOpts ? opts.csrfOpts : {}
@@ -36,8 +38,14 @@ async function fastifyCsrfProtection (fastify, opts) {
   assert(typeof cookieOpts === 'object', 'cookieOpts should be a object')
   assert(
     ['@fastify/cookie', '@fastify/session', '@fastify/secure-session'].includes(sessionPlugin),
-    "sessionPlugin should be one of the following: '@fastify/cookie', '@fastify/session', '@fastify/secure-session'"
+    'sessionPlugin should be one of the following: \'@fastify/cookie\', \'@fastify/session\', \'@fastify/secure-session\''
   )
+  assert(Array.isArray(protectedMethods), 'protectedMethods should be an array')
+
+  if (!protectedMethods.length) {
+    // for security reasons, default methods are restored
+    protectedMethods.push(...defaultOptions.protectedMethods)
+  }
 
   if (opts.getUserInfo) {
     csrfOpts.userInfo = true
@@ -111,14 +119,16 @@ async function fastifyCsrfProtection (fastify, opts) {
   }
 
   function csrfProtection (req, reply, next) {
-    const secret = getSecret(req, reply)
-    if (!secret) {
-      req.log.warn('Missing csrf secret')
-      return reply.send(new MissingCSRFSecretError())
-    }
-    if (!tokens.verify(secret, getToken(req), getUserInfo(req))) {
-      req.log.warn('Invalid csrf token')
-      return reply.send(new InvalidCSRFTokenError())
+    if (protectedMethods.indexOf(req.method) > -1) {
+      const secret = getSecret(req, reply)
+      if (!secret) {
+        req.log.warn('Missing csrf secret')
+        return reply.send(new MissingCSRFSecretError())
+      }
+      if (!tokens.verify(secret, getToken(req), getUserInfo(req))) {
+        req.log.warn('Invalid csrf token')
+        return reply.send(new InvalidCSRFTokenError())
+      }
     }
     next()
   }

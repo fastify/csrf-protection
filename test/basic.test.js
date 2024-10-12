@@ -21,6 +21,7 @@ test('Cookies', t => {
     fastify.decorate('testType', 'fastify-cookie')
     return fastify
   }
+
   runTest(t, load, { property: '_csrf', place: 'body' }, 'preValidation')
   runTest(t, load, { property: 'csrf-token', place: 'headers' })
   runTest(t, load, { property: 'xsrf-token', place: 'headers' })
@@ -56,6 +57,7 @@ test('Cookies signed', t => {
     fastify.decorate('testType', 'fastify-cookie')
     return fastify
   }
+
   runTest(t, load, { property: '_csrf', place: 'body' }, 'preValidation')
   runTest(t, load, { property: 'csrf-token', place: 'headers' })
   runTest(t, load, { property: 'xsrf-token', place: 'headers' })
@@ -77,6 +79,7 @@ test('Fastify Session', t => {
     fastify.decorate('testType', 'fastify-session')
     return fastify
   }
+
   runTest(t, load, { property: '_csrf', place: 'body' }, 'preValidation')
   runTest(t, load, { property: 'csrf-token', place: 'headers' }, 'preValidation')
   runTest(t, load, { property: 'xsrf-token', place: 'headers' }, 'preValidation')
@@ -93,6 +96,7 @@ test('Fastify Secure Session', t => {
     fastify.decorate('testType', 'fastify-secure-session')
     return fastify
   }
+
   runTest(t, load, { property: '_csrf', place: 'body' }, 'preValidation')
   runTest(t, load, { property: 'csrf-token', place: 'headers' })
   runTest(t, load, { property: 'xsrf-token', place: 'headers' })
@@ -149,7 +153,17 @@ test('Validation', t => {
     fastify.register(fastifyCookie)
     fastify.register(fastifyCsrf, { sessionPlugin: 42 })
     fastify.ready(err => {
-      t.equal(err.message, "sessionPlugin should be one of the following: '@fastify/cookie', '@fastify/session', '@fastify/secure-session'")
+      t.equal(err.message, 'sessionPlugin should be one of the following: \'@fastify/cookie\', \'@fastify/session\', \'@fastify/secure-session\'')
+    })
+  })
+
+  t.test('protectedMethods', t => {
+    t.plan(1)
+    const fastify = Fastify()
+    fastify.register(fastifyCookie)
+    fastify.register(fastifyCsrf, { protectedMethods: 42 })
+    fastify.ready(err => {
+      t.equal(err.message, 'protectedMethods should be an array')
     })
   })
 
@@ -172,6 +186,52 @@ test('csrf options', async () => {
     .register(fastifyCsrf, { csrfOpts })
 
   sinon.assert.calledWith(csrf, csrfOpts)
+})
+
+test('csrfProtection on fastify instance', t => {
+  async function load (protectedMethods = []) {
+    const fastify = Fastify()
+    await fastify.register(fastifyCookie)
+    await fastify.register(fastifyCsrf, { protectedMethods })
+    fastify.decorate('testType', 'fastify-cookie')
+    fastify.addHook('onRequest', fastify.csrfProtection)
+    fastify.get('/', async (req, reply) => {
+      return {}
+    })
+    fastify.post('/', async (req, reply) => {
+      return {}
+    })
+    return fastify
+  }
+
+  t.test('GET method should failed', async t => {
+    const fastify = await load(['GET'])
+    const response = await fastify.inject({
+      method: 'GET',
+      path: '/'
+    })
+    t.match(response.json(), { message: 'Missing csrf secret' })
+  })
+
+  t.test('GET method should pass', async t => {
+    const fastify = await load()
+    const response = await fastify.inject({
+      method: 'GET',
+      path: '/'
+    })
+    t.equal(response.statusCode, 200)
+  })
+
+  t.test('POST method should failed', async t => {
+    const fastify = await load()
+    const response = await fastify.inject({
+      method: 'POST',
+      path: '/'
+    })
+    t.match(response.json(), { message: 'Missing csrf secret' })
+  })
+
+  t.end()
 })
 
 function runTest (t, load, tkn, hook = 'onRequest') {
