@@ -41,7 +41,7 @@ fastify.route({
               body: JSON.stringify({ _csrf: '${token}'})
             });
             const content = await rawResponse.json();
-            
+
             alert(JSON.stringify(content));
           }
         </script>
@@ -51,7 +51,7 @@ fastify.route({
           </form>
         </body>
       </html>
-    
+
     `
   }
 })
