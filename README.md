@@ -138,15 +138,16 @@ Apart from these safeguards, it is extremely important to [use HTTPS for your we
 
 ### Module Options
 
-| Options      | Description |
-| ----------- | ----------- |
-| `cookieKey` |  The name of the cookie where the CSRF secret will be stored, default `_csrf`.     |
-| `cookieOpts` |  The cookie serialization options. See [@fastify/cookie](https://github.com/fastify/fastify-cookie).    |
-| `sessionKey` |  The key where to store the CSRF secret in the session.     |
-| `getToken` |  A sync function to get the CSRF secret from the request.     |
-| `getUserInfo` |  A sync function to get the a string of user-specific information to prevent cookie tossing.     |
-| `sessionPlugin` |  The session plugin that you are using (if applicable).     |
-| `csrfOpts` |  The csrf options. See  [@fastify/csrf](https://github.com/fastify/csrf).     |
+| Options            | Description                                                                                                     |
+|--------------------|-----------------------------------------------------------------------------------------------------------------|
+| `cookieKey`        | The name of the cookie where the CSRF secret will be stored, default `_csrf`.                                   |
+| `cookieOpts`       | The cookie serialization options. See [@fastify/cookie](https://github.com/fastify/fastify-cookie).             |
+| `sessionKey`       | The key where to store the CSRF secret in the session.                                                          |
+| `getToken`         | A sync function to get the CSRF secret from the request.                                                        |
+| `getUserInfo`      | A sync function to get the a string of user-specific information to prevent cookie tossing.                     |
+| `sessionPlugin`    | The session plugin that you are using (if applicable).                                                          |
+| `csrfOpts`         | The csrf options. See  [@fastify/csrf](https://github.com/fastify/csrf).                                        |
+| `protectedMethods` | An array to define all methods protected by CSRF, default (or empty array) `['POST', 'PUT', 'PATCH', 'DELETE']` |
 
 ### `reply.generateCsrf([opts])`
 

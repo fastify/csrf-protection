@@ -33,6 +33,7 @@ declare namespace fastifyCsrfProtection {
     sessionKey?: string;
     getUserInfo?: (req: FastifyRequest) => string;
     getToken?: GetTokenFn;
+    protectedMethods?: string[];
   }
 
   interface FastifyCsrfProtectionOptionsFastifyCookie {
