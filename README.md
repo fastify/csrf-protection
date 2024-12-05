@@ -1,6 +1,6 @@
 # @fastify/csrf-protection
 
-![CI](https://github.com/fastify/csrf-protection/workflows/CI/badge.svg)
+[![CI](https://github.com/fastify/csrf-protection/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/fastify/csrf-protection/actions/workflows/ci.yml)
 [![NPM version](https://img.shields.io/npm/v/@fastify/csrf-protection.svg?style=flat)](https://www.npmjs.com/package/@fastify/csrf-protection)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://standardjs.com/)
 
