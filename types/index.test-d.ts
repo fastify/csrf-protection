@@ -12,7 +12,7 @@ declare module 'fastify' {
   }
 }
 
-async function run() {
+async function run () {
   await fastify.register(FastifyCookie)
   await fastify.register(FastifyCsrfProtection)
 
@@ -38,7 +38,6 @@ async function run() {
   fastify.addHook('onRequest', fastify.csrfProtection)
 }
 
-
 fastify.register(FastifyCsrfProtection, { csrfOpts: { algorithm: 'sha1', hmacKey: 'hmac' } })
 expectError(fastify.register(FastifyCsrfProtection, { csrfOpts: { algorithm: 1 } }))
 
@@ -47,7 +46,7 @@ fastify.register(FastifyCsrfProtection, {
   csrfOpts: {
     hmacKey: '123'
   },
-  getUserInfo(req) {
+  getUserInfo (req) {
     const info = req.session.get('username')
     if (info) {
       return info
@@ -61,10 +60,10 @@ expectError(fastify.register(FastifyCsrfProtection, { getUserInfo: 'invalid' }))
 fastify.register(FastifyCsrfProtection, { csrfOpts: { hmacKey: 'hmac' }, sessionPlugin: '@fastify/cookie' })
 fastify.register(FastifyCsrfProtection, { csrfOpts: { hmacKey: 'hmac' } })
 fastify.register(FastifyCsrfProtection, { })
-fastify.register(FastifyCsrfProtection, { csrfOpts: { }})
-expectError(fastify.register(FastifyCsrfProtection, { sessionPlugin: '@fastify/cookie', csrfOpts: { userInfo: true}}))
-fastify.register(FastifyCsrfProtection, { sessionPlugin: '@fastify/cookie', csrfOpts: { userInfo: true, hmacKey: 'key'}})
-fastify.register(FastifyCsrfProtection, { sessionPlugin: '@fastify/cookie'})
+fastify.register(FastifyCsrfProtection, { csrfOpts: { } })
+expectError(fastify.register(FastifyCsrfProtection, { sessionPlugin: '@fastify/cookie', csrfOpts: { userInfo: true } }))
+fastify.register(FastifyCsrfProtection, { sessionPlugin: '@fastify/cookie', csrfOpts: { userInfo: true, hmacKey: 'key' } })
+fastify.register(FastifyCsrfProtection, { sessionPlugin: '@fastify/cookie' })
 fastify.register(FastifyCsrfProtection, { csrfOpts: { }, sessionPlugin: '@fastify/session' })
 fastify.register(FastifyCsrfProtection, { csrfOpts: { }, sessionPlugin: '@fastify/secure-session' })
 fastify.register(FastifyCsrfProtection, { sessionPlugin: '@fastify/session' })
