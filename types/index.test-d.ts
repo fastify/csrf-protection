@@ -37,11 +37,12 @@ async function run () {
 
   fastify.addHook('onRequest', fastify.csrfProtection)
 }
+run()
 
 fastify.register(FastifyCsrfProtection, { csrfOpts: { algorithm: 'sha1', hmacKey: 'hmac' } })
 expectError(fastify.register(FastifyCsrfProtection, { csrfOpts: { algorithm: 1 } }))
 
-fastify.register(FastifySession)
+fastify.register(FastifySession, { secret: 'a secret with minimum length of 32 characters' })
 fastify.register(FastifyCsrfProtection, {
   csrfOpts: {
     hmacKey: '123'
