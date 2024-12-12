@@ -1,8 +1,8 @@
 /// <reference types="node" />
 
-import { FastifyPluginAsync, FastifyRequest } from 'fastify';
-import { Options as CSRFOptions } from "@fastify/csrf";
-import { CookieSerializeOptions as FastifyCookieSerializeOptions } from "@fastify/cookie";
+import { FastifyPluginAsync, FastifyRequest } from 'fastify'
+import { Options as CSRFOptions } from '@fastify/csrf'
+import { CookieSerializeOptions as FastifyCookieSerializeOptions } from '@fastify/cookie'
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -20,12 +20,12 @@ declare module 'fastify' {
   }
 }
 
-type FastifyCsrfProtection = FastifyPluginAsync<fastifyCsrfProtection.FastifyCsrfOptions>;
+type FastifyCsrfProtection = FastifyPluginAsync<fastifyCsrfProtection.FastifyCsrfOptions>
 
 declare namespace fastifyCsrfProtection {
   export type CookieSerializeOptions = FastifyCookieSerializeOptions
 
-  export type GetTokenFn = (req: FastifyRequest) => string | void;
+  export type GetTokenFn = (req: FastifyRequest) => string | void
 
   interface FastifyCsrfProtectionOptionsBase {
     cookieKey?: string;
@@ -38,15 +38,15 @@ declare namespace fastifyCsrfProtection {
   interface FastifyCsrfProtectionOptionsFastifyCookie {
     sessionPlugin?: '@fastify/cookie';
     csrfOpts?: | ({
-      [k in keyof CSRFOptions]: k extends "userInfo"
+      [k in keyof CSRFOptions]: k extends 'userInfo'
         ? true
         : CSRFOptions[k];
-    } & Required<Pick<CSRFOptions, "hmacKey">>)
+    } & Required<Pick<CSRFOptions, 'hmacKey'>>)
   | ({
-      [k in keyof CSRFOptions]: k extends "userInfo"
-        ? false
-        : CSRFOptions[k];
-    });
+    [k in keyof CSRFOptions]: k extends 'userInfo'
+      ? false
+      : CSRFOptions[k];
+  });
   }
 
   interface FastifyCsrfProtectionOptionsFastifySession {
@@ -68,12 +68,11 @@ declare namespace fastifyCsrfProtection {
   /**
    * @deprecated Use FastifyCsrfProtectionOptions instead
    */
-  export type FastifyCsrfOptions = FastifyCsrfProtectionOptions;
+  export type FastifyCsrfOptions = FastifyCsrfProtectionOptions
 
   export const fastifyCsrfProtection: FastifyCsrfProtection
   export { fastifyCsrfProtection as default }
 }
 
-
-declare function fastifyCsrfProtection(...params: Parameters<FastifyCsrfProtection>): ReturnType<FastifyCsrfProtection>
+declare function fastifyCsrfProtection (...params: Parameters<FastifyCsrfProtection>): ReturnType<FastifyCsrfProtection>
 export = fastifyCsrfProtection
