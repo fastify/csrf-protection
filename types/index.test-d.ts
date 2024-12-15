@@ -37,7 +37,7 @@ async function run () {
 
   fastify.addHook('onRequest', fastify.csrfProtection)
 }
-run()
+await run()
 
 fastify.register(FastifyCsrfProtection, { csrfOpts: { algorithm: 'sha1', hmacKey: 'hmac' } })
 expectError(fastify.register(FastifyCsrfProtection, { csrfOpts: { algorithm: 1 } }))
