@@ -40,6 +40,7 @@
     "@fastify/secure-session": "^8.0.0",
     "@fastify/session": "^11.0.0",
     "@types/node": "^22.0.0",
+    "eslint": "^9.17.0",
     "fastify": "^5.0.0",
     "neostandard": "^0.12.0",
     "proxyquire": "^2.1.3",
