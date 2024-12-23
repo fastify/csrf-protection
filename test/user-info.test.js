@@ -1,6 +1,6 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
 const Fastify = require('fastify')
 const fastifyCookie = require('@fastify/cookie')
 const fastifySession = require('@fastify/session')
@@ -45,7 +45,7 @@ test('Cookies with User-Info', async t => {
     }
   })
 
-  t.equal(response1.statusCode, 200)
+  t.assert.strictEqual(response1.statusCode, 200)
 
   const cookie1 = response1.cookies[0]
   const { token } = response1.json()
@@ -62,7 +62,7 @@ test('Cookies with User-Info', async t => {
     }
   })
 
-  t.equal(response2.statusCode, 200)
+  t.assert.strictEqual(response2.statusCode, 200)
 })
 
 test('Session with User-Info', async t => {
@@ -101,7 +101,7 @@ test('Session with User-Info', async t => {
     }
   })
 
-  t.equal(response1.statusCode, 200)
+  t.assert.strictEqual(response1.statusCode, 200)
 
   const cookie1 = response1.cookies[0]
   const { token } = response1.json()
@@ -118,7 +118,7 @@ test('Session with User-Info', async t => {
     }
   })
 
-  t.equal(response2.statusCode, 200)
+  t.assert.strictEqual(response2.statusCode, 200)
 })
 
 test('SecureSession with User-Info', async t => {
@@ -153,7 +153,7 @@ test('SecureSession with User-Info', async t => {
     }
   })
 
-  t.equal(response1.statusCode, 200)
+  t.assert.strictEqual(response1.statusCode, 200)
 
   const cookie1 = response1.cookies[0]
   const { token } = response1.json()
@@ -170,14 +170,14 @@ test('SecureSession with User-Info', async t => {
     }
   })
 
-  t.equal(response2.statusCode, 200)
+  t.assert.strictEqual(response2.statusCode, 200)
 })
 
 test('Validate presence of hmac key with User-Info /1', async (t) => {
   const fastify = Fastify()
   await fastify.register(fastifyCookie)
 
-  await t.rejects(new Promise((resolve, reject) => {
+  await t.assert.rejects(new Promise((resolve, reject) => {
     fastify.register(fastifyCsrf, {
       getUserInfo (req) {
         return req.session.get('username')
@@ -187,14 +187,20 @@ test('Validate presence of hmac key with User-Info /1', async (t) => {
     }).catch(err => {
       reject(err)
     })
-  }), Error('csrfOpts.hmacKey is required'))
+  }),
+  (err) => {
+    t.assert.strictEqual(err.name, 'AssertionError')
+    t.assert.strictEqual(err.message, 'csrfOpts.hmacKey is required')
+    return true
+  }
+  )
 })
 
 test('Validate presence of hmac key with User-Info /2', async (t) => {
   const fastify = Fastify()
   await fastify.register(fastifyCookie)
 
-  await t.rejects(new Promise((resolve, reject) => {
+  await t.assert.rejects(new Promise((resolve, reject) => {
     fastify.register(fastifyCsrf, {
       getUserInfo (req) {
         return req.session.get('username')
@@ -205,14 +211,21 @@ test('Validate presence of hmac key with User-Info /2', async (t) => {
     }).catch(err => {
       reject(err)
     })
-  }), Error('csrfOpts.hmacKey is required'))
+  }),
+  (err) => {
+    t.assert.strictEqual(err.name, 'AssertionError')
+    t.assert.strictEqual(err.message, 'csrfOpts.hmacKey is required')
+    return true
+  }
+
+  )
 })
 
 test('Validate presence of hmac key with User-Info /3', async (t) => {
   const fastify = Fastify()
   await fastify.register(fastifyCookie)
 
-  await t.rejects(new Promise((resolve, reject) => {
+  await t.assert.rejects(new Promise((resolve, reject) => {
     fastify.register(fastifyCsrf, {
       getUserInfo (req) {
         return req.session.get('username')
@@ -225,14 +238,20 @@ test('Validate presence of hmac key with User-Info /3', async (t) => {
     }).catch(err => {
       reject(err)
     })
-  }), Error('csrfOpts.hmacKey is required'))
+  }),
+  (err) => {
+    t.assert.strictEqual(err.name, 'AssertionError')
+    t.assert.strictEqual(err.message, 'csrfOpts.hmacKey is required')
+    return true
+  }
+  )
 })
 
 test('Validate presence of hmac key with User-Info /4', async (t) => {
   const fastify = Fastify()
   await fastify.register(fastifyCookie)
 
-  await t.rejects(new Promise((resolve, reject) => {
+  await t.assert.rejects(new Promise((resolve, reject) => {
     fastify.register(fastifyCsrf, {
       getUserInfo (req) {
         return req.session.get('username')
@@ -246,14 +265,20 @@ test('Validate presence of hmac key with User-Info /4', async (t) => {
     }).catch(err => {
       reject(err)
     })
-  }), Error('csrfOpts.hmacKey is required'))
+  }),
+  (err) => {
+    t.assert.strictEqual(err.name, 'AssertionError')
+    t.assert.strictEqual(err.message, 'csrfOpts.hmacKey is required')
+    return true
+  }
+  )
 })
 
 test('Validate presence of hmac key with User-Info /5', async (t) => {
   const fastify = Fastify()
   await fastify.register(fastifySecureSession, { key, cookie: { path: '/', secure: false } })
 
-  await t.resolves(new Promise((resolve, reject) => {
+  await t.assert.doesNotReject(new Promise((resolve, reject) => {
     fastify.register(fastifyCsrf, {
       getUserInfo (req) {
         return req.session.get('username')
@@ -271,7 +296,7 @@ test('Validate presence of hmac key with User-Info /6', async (t) => {
   const fastify = Fastify()
   await fastify.register(fastifySecureSession, { key, cookie: { path: '/', secure: false } })
 
-  await t.resolves(new Promise((resolve, reject) => {
+  await t.assert.doesNotReject(new Promise((resolve, reject) => {
     fastify.register(fastifyCsrf, {
       getUserInfo (req) {
         return req.session.get('username')
