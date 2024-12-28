@@ -20,10 +20,22 @@ As a result we will not consider a report of a plugin default configuration opti
 vulnerability that might be unsafe in certain scenarios as long as this module provides a
 way to provide full mitigation through configuration.
 
-# Install
+## Install
 ```js
 npm i @fastify/csrf-protection
 ```
+
+### Compatibility
+| Plugin version | Fastify version |
+| ---------------|-----------------|
+| `^7.x`         | `^5.x`          |
+| `^4.x`         | `^4.x`          |
+| `^3.x`         | `^3.x`          |
+
+
+Please note that if a Fastify version is out of support, then so are the corresponding versions of this plugin
+in the table above.
+See [Fastify's LTS policy](https://github.com/fastify/fastify/blob/main/docs/Reference/LTS.md) for more details.
 
 ## Usage
 
@@ -213,4 +225,4 @@ fastify.register(require('@fastify/csrf-protection'),
 
 ## License
 
-[MIT](./LICENSE)
+Licensed under [MIT](./LICENSE).
