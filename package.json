@@ -16,12 +16,24 @@
     "type": "git",
     "url": "git+https://github.com/fastify/fastify-csrf.git"
   },
-  "author": "",
+  "author": "Tarang11",
   "contributors": [
     {
-      "name": "Martin Jurča",
-      "email": "mjurca@centrum.cz",
-      "url": "https://github.com/jurca"
+      "name": "Matteo Collina",
+      "email": "hello@matteocollina.com"
+    },
+    {
+      "name": "Tomas Della Vedova",
+      "url": "http://delved.org"
+    },
+    {
+      "name": "Aras Abbasi",
+      "email": "aras.abbasi@gmail.com"
+    },
+    {
+      "name": "Frazer Smith",
+      "email": "frazer.dev@icloud.com",
+      "url": "https://github.com/fdawgs"
     }
   ],
   "license": "MIT",
@@ -29,6 +41,16 @@
     "url": "https://github.com/fastify/fastify-csrf/issues"
   },
   "homepage": "https://github.com/fastify/fastify-csrf#readme",
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/fastify"
+    },
+    {
+      "type": "opencollective",
+      "url": "https://opencollective.com/fastify"
+    }
+  ],
   "dependencies": {
     "@fastify/csrf": "^7.0.0",
     "@fastify/error": "^4.0.0",
