@@ -27,7 +27,7 @@ async function fastifyCsrfProtection (fastify, opts) {
     sessionPlugin
   } = Object.assign({}, defaultOptions, opts)
 
-  const csrfOpts = opts && opts.csrfOpts ? opts.csrfOpts : {}
+  const csrfOpts = opts?.csrfOpts ? opts.csrfOpts : {}
 
   assert(typeof cookieKey === 'string', 'cookieKey should be a string')
   assert(typeof sessionKey === 'string', 'sessionKey should be a string')
@@ -49,7 +49,7 @@ async function fastifyCsrfProtection (fastify, opts) {
 
   const tokens = new CSRF(csrfOpts)
 
-  const isCookieSigned = cookieOpts && cookieOpts.signed
+  const isCookieSigned = cookieOpts?.signed
 
   if (sessionPlugin === '@fastify/secure-session') {
     fastify.decorateReply('generateCsrf', generateCsrfSecureSession)
@@ -125,7 +125,7 @@ async function fastifyCsrfProtection (fastify, opts) {
 }
 
 function getTokenDefault (req) {
-  return (req.body && req.body._csrf) ||
+  return req.body?._csrf ||
     req.headers['csrf-token'] ||
     req.headers['xsrf-token'] ||
     req.headers['x-csrf-token'] ||
