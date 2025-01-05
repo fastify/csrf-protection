@@ -10,13 +10,13 @@ in depth. See also [pillarjs/understanding-csrf](https://github.com/pillarjs/und
 
 ## Security Disclaimer
 
-Securing applications against CSRF is a _developer responsibility_ and it should not be fully trusted to any third party modules.
-We do not claim that this module is able to protect an application without a clear study of CSRF, its impact and the needed mitigations.
+Securing applications against CSRF is a _developer's responsibility_ and it should not be fully trusted to any third-party modules.
+We do not claim that this module is able to protect an application without a clear study of CSRF, its impact, and the needed mitigations.
 @fastify/csrf-protection provides a series of utilities that developers can use to secure their application.
 We recommend using [@fastify/helmet](https://github.com/fastify/fastify-helmet) to implement some of those mitigations.
 
 Security is always a tradeoff between risk mitigation, functionality, performance, and developer experience.
-As a result we will not consider a report of a plugin default configuration option as security
+As a result, we will not consider a report of a plugin default configuration option as a security
 vulnerability that might be unsafe in certain scenarios as long as this module provides a
 way to provide full mitigation through configuration.
 
@@ -139,10 +139,10 @@ fastify.route({
 
 The `secret` shown in the code above is strictly just an example. In all cases, you would need to make sure that the `secret` is:
 - **Never** hard-coded in the code or `.env` files or anywhere in the repository
-- Stored in some external services like KMS, Vault or something similar
+- Stored in some external services like KMS, Vault, or something similar
 - Read at run-time and supplied to this option
 - Of significant character length to provide adequate entropy
-- Truly random sequence of characters (You could use [crypto-random-string](https://npm.im/crypto-random-string))
+- A truly random sequence of characters (You could use [crypto-random-string](https://npm.im/crypto-random-string))
 
 Apart from these safeguards, it is extremely important to [use HTTPS for your website/app](https://letsencrypt.org/) to avoid a bunch of other potential security issues like [MITM attacks](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) etc.
 
@@ -156,9 +156,9 @@ Apart from these safeguards, it is extremely important to [use HTTPS for your we
 | `cookieOpts` |  The cookie serialization options. See [@fastify/cookie](https://github.com/fastify/fastify-cookie).    |
 | `sessionKey` |  The key where to store the CSRF secret in the session.     |
 | `getToken` |  A sync function to get the CSRF secret from the request.     |
-| `getUserInfo` |  A sync function to get the a string of user-specific information to prevent cookie tossing.     |
+| `getUserInfo` |  A sync function to get a string of user-specific information to prevent cookie tossing.     |
 | `sessionPlugin` |  The session plugin that you are using (if applicable).     |
-| `csrfOpts` |  The csrf options. See  [@fastify/csrf](https://github.com/fastify/csrf).     |
+| `csrfOpts` |  The csrf options. See [@fastify/csrf](https://github.com/fastify/csrf).     |
 
 ### `reply.generateCsrf([opts])`
 
@@ -171,9 +171,9 @@ const token = reply.generateCsrf()
 You can also pass the [cookie serialization](https://github.com/fastify/fastify-cookie) options to the function.
 
 The option `userInfo` is required if `getUserInfo` has been specified in the module option.
-The provided `userInfo` is hashed  inside the csrf token and it is not directly exposed.
+The provided `userInfo` is hashed inside the csrf token and it is not directly exposed.
 This option is needed to protect against cookie tossing.
-The option `csrfOpts.hmacKey` is required if `getUserInfo` has been specified in the module option in combination with using [@fastify/cookie](https://github.com/fastify/fastify-cookie) as sessionPlugin
+The option `csrfOpts.hmacKey` is required if `getUserInfo` has been specified in the module option in combination with using [@fastify/cookie](https://github.com/fastify/fastify-cookie) as sessionPlugin.
 
 ### `fastify.csrfProtection(request, reply, next)`
 
