@@ -31,7 +31,7 @@ test('Cookies', async t => {
   await t.test('Default cookie options', async t => {
     const fastify = await load()
 
-    fastify.get('/', async (req, reply) => {
+    fastify.get('/', async (_req, reply) => {
       const token = reply.generateCsrf()
       return { token }
     })
@@ -181,12 +181,12 @@ async function runtTest (t, load, tkn, hook = 'onRequest') {
   await t.test(`Token in ${tkn.place}`, async t => {
     const fastify = await load()
 
-    fastify.get('/', async (req, reply) => {
+    fastify.get('/', async (_req, reply) => {
       const token = reply.generateCsrf()
       return { token }
     })
 
-    fastify.post('/', { [hook]: fastify.csrfProtection }, async (req, reply) => {
+    fastify.post('/', { [hook]: fastify.csrfProtection }, async (req) => {
       return req.body
     })
 
@@ -276,7 +276,7 @@ async function runCookieOpts (t, load) {
   await t.test('Custom cookie options', async t => {
     const fastify = await load()
 
-    fastify.get('/', async (req, reply) => {
+    fastify.get('/', async (_req, reply) => {
       const token = reply.generateCsrf({ path: '/hello' })
       return { token }
     })

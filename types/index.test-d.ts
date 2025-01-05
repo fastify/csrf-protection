@@ -19,7 +19,7 @@ async function run () {
   fastify.route({
     method: 'GET',
     url: '/',
-    handler: async (req, reply) => {
+    handler: async (_req, reply) => {
       const token = reply.generateCsrf()
       expectType<string>(token)
       return token
@@ -30,7 +30,7 @@ async function run () {
     method: 'POST',
     url: '/',
     onRequest: fastify.csrfProtection,
-    handler: async (req, reply) => {
+    handler: async (req) => {
       return req.body
     }
   })

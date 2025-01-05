@@ -14,7 +14,7 @@ fastify.post(
   {
     preHandler: fastify.csrfProtection
   },
-  async (req, reply) => {
+  async (req) => {
     return req.body
   }
 )
@@ -23,7 +23,7 @@ fastify.post(
 fastify.route({
   method: 'GET',
   url: '/',
-  handler: async (req, reply) => {
+  handler: async (_req, reply) => {
     const token = reply.generateCsrf()
     reply.type('text/html')
 
@@ -57,7 +57,7 @@ fastify.route({
 })
 
 // Run the server!
-fastify.listen({ port: 3001 }, function (err, address) {
+fastify.listen({ port: 3001 }, function (err) {
   if (err) {
     fastify.log.error(err)
     process.exit(1)

@@ -33,7 +33,7 @@ test('Cookies with User-Info', async t => {
   })
 
   // must be preHandler as we are parsing the body
-  fastify.post('/', { preHandler: fastify.csrfProtection }, async (req, reply) => {
+  fastify.post('/', { preHandler: fastify.csrfProtection }, async (req) => {
     return req.body
   })
 
@@ -89,7 +89,7 @@ test('Session with User-Info', async t => {
   })
 
   // must be preHandler as we are parsing the body
-  fastify.post('/', { preHandler: fastify.csrfProtection }, async (req, reply) => {
+  fastify.post('/', { preHandler: fastify.csrfProtection }, async (req) => {
     return req.body
   })
 
@@ -141,7 +141,7 @@ test('SecureSession with User-Info', async t => {
   })
 
   // must be preHandler as we are parsing the body
-  fastify.post('/', { preHandler: fastify.csrfProtection }, async (req, reply) => {
+  fastify.post('/', { preHandler: fastify.csrfProtection }, async (req) => {
     return req.body
   })
 

@@ -64,9 +64,9 @@ async function fastifyCsrfProtection (fastify, opts) {
   let getSecret
 
   if (sessionPlugin === '@fastify/secure-session') {
-    getSecret = function getSecret (req, reply) { return req.session.get(sessionKey) }
+    getSecret = function getSecret (req, _reply) { return req.session.get(sessionKey) }
   } else if (sessionPlugin === '@fastify/session') {
-    getSecret = function getSecret (req, reply) { return req.session[sessionKey] }
+    getSecret = function getSecret (req, _reply) { return req.session[sessionKey] }
   } else {
     getSecret = function getSecret (req, reply) {
       return isCookieSigned
@@ -132,7 +132,7 @@ function getTokenDefault (req) {
     req.headers['x-xsrf-token']
 }
 
-function getUserInfoDefault (req) {
+function getUserInfoDefault (_req) {
   return undefined
 }
 
