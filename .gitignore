@@ -145,9 +145,6 @@ yarn.lock
 .vscode
 .idea
 
-#tap files
-.tap/
-
 # Optional compressed files (npm generated package, zip, etc)
 /*.zip
 
@@ -162,6 +159,3 @@ profile*
 # generated code
 examples/typescript-server.js
 test/types/index.js
-
-# test tap report
-out.tap
