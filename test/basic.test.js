@@ -157,6 +157,18 @@ test('Validation', async t => {
       t.assert.strictEqual(err.message, "sessionPlugin should be one of the following: '@fastify/cookie', '@fastify/session', '@fastify/secure-session'")
     }
   })
+
+  await t.test('logLevel', async t => {
+    t.plan(1)
+    try {
+      const fastify = Fastify()
+      await fastify.register(fastifyCookie)
+      await fastify.register(fastifyCsrf, { logLevel: undefined })
+      await fastify.ready()
+    } catch (err) {
+      t.assert.strictEqual(err.message, 'logLevel should be a string')
+    }
+  })
 })
 
 test('csrf options', async () => {

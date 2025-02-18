@@ -36,6 +36,7 @@ async function fastifyCsrfProtection (fastify, opts) {
   assert(typeof getToken === 'function', 'getToken should be a function')
   assert(typeof getUserInfo === 'function', 'getUserInfo should be a function')
   assert(typeof cookieOpts === 'object', 'cookieOpts should be a object')
+  assert(typeof logLevel === 'string', 'logLevel should be a string')
   assert(
     ['@fastify/cookie', '@fastify/session', '@fastify/secure-session'].includes(sessionPlugin),
     "sessionPlugin should be one of the following: '@fastify/cookie', '@fastify/session', '@fastify/secure-session'"
