@@ -14,7 +14,8 @@ const defaultOptions = {
   sessionKey: '_csrf',
   getToken: getTokenDefault,
   getUserInfo: getUserInfoDefault,
-  sessionPlugin: '@fastify/cookie'
+  sessionPlugin: '@fastify/cookie',
+  logLevel: 'warn'
 }
 
 async function fastifyCsrfProtection (fastify, opts) {
@@ -24,7 +25,8 @@ async function fastifyCsrfProtection (fastify, opts) {
     sessionKey,
     getToken,
     getUserInfo,
-    sessionPlugin
+    sessionPlugin,
+    logLevel
   } = Object.assign({}, defaultOptions, opts)
 
   const csrfOpts = opts?.csrfOpts ? opts.csrfOpts : {}
@@ -113,11 +115,11 @@ async function fastifyCsrfProtection (fastify, opts) {
   function csrfProtection (req, reply, next) {
     const secret = getSecret(req, reply)
     if (!secret) {
-      req.log.warn('Missing csrf secret')
+      req.log[logLevel]('Missing csrf secret')
       return reply.send(new MissingCSRFSecretError())
     }
     if (!tokens.verify(secret, getToken(req), getUserInfo(req))) {
-      req.log.warn('Invalid csrf token')
+      req.log[logLevel]('Invalid csrf token')
       return reply.send(new InvalidCSRFTokenError())
     }
     next()
