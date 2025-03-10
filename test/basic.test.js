@@ -157,6 +157,18 @@ test('Validation', async t => {
       t.assert.strictEqual(err.message, "sessionPlugin should be one of the following: '@fastify/cookie', '@fastify/session', '@fastify/secure-session'")
     }
   })
+
+  await t.test('logLevel', async t => {
+    t.plan(1)
+    try {
+      const fastify = Fastify()
+      await fastify.register(fastifyCookie)
+      await fastify.register(fastifyCsrf, { logLevel: undefined })
+      await fastify.ready()
+    } catch (err) {
+      t.assert.strictEqual(err.message, 'logLevel should be a string')
+    }
+  })
 })
 
 test('csrf options', async () => {
@@ -175,6 +187,93 @@ test('csrf options', async () => {
     .register(fastifyCsrf, { csrfOpts })
 
   sinon.assert.calledWith(csrf, csrfOpts)
+})
+
+const spyLogger = {
+  warn: sinon.spy(),
+  error: sinon.spy(),
+  info: sinon.spy(),
+  debug: sinon.spy(),
+  fatal: sinon.spy(),
+  trace: sinon.spy(),
+  child: () => spyLogger
+}
+
+test('logLevel options', async t => {
+  async function load (logLevel) {
+    const opts = logLevel ? { logLevel } : {}
+    const fastify = Fastify({ loggerInstance: spyLogger })
+    await fastify.register(fastifyCookie)
+    await fastify.register(fastifyCsrf, opts)
+    fastify.get('/', async (_req, reply) => {
+      reply.generateCsrf()
+      return {}
+    })
+
+    fastify.post('/', {
+      onRequest: fastify.csrfProtection
+    }, async () => {
+      return {}
+    })
+    await fastify.ready()
+    return fastify
+  }
+
+  async function makeRequests (fastify) {
+    const response = await fastify.inject({
+      method: 'GET',
+      path: '/'
+    })
+
+    const cookie = response.cookies[0]
+
+    // missing csrf secret
+    await fastify.inject({
+      method: 'POST',
+      payload: { hello: 'world' },
+      path: '/',
+    })
+
+    // invalid csrf token
+    await fastify.inject({
+      method: 'POST',
+      payload: { hello: 'world' },
+      path: '/',
+      cookies: {
+        [cookie.name]: cookie.value
+      }
+    })
+  }
+
+  t.afterEach(() => {
+    spyLogger.warn.resetHistory()
+    spyLogger.error.resetHistory()
+  })
+
+  await t.test('default log level', async t => {
+    t.plan(1)
+    const fastify = await load()
+    await makeRequests(fastify)
+
+    t.assert.strictEqual(spyLogger.warn.callCount, 2)
+  })
+
+  await t.test('custom log level', async t => {
+    t.plan(2)
+    const fastify = await load('error')
+    await makeRequests(fastify)
+
+    t.assert.strictEqual(spyLogger.error.callCount, 2)
+    t.assert.ok(spyLogger.warn.notCalled)
+  })
+
+  await t.test('silent log level', async t => {
+    t.plan(1)
+    const fastify = await load('silent')
+    await makeRequests(fastify)
+
+    t.assert.ok(spyLogger.warn.notCalled)
+  })
 })
 
 async function runtTest (t, load, tkn, hook = 'onRequest') {

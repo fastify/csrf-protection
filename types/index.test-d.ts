@@ -69,5 +69,6 @@ fastify.register(FastifyCsrfProtection, { csrfOpts: { }, sessionPlugin: '@fastif
 fastify.register(FastifyCsrfProtection, { csrfOpts: { }, sessionPlugin: '@fastify/secure-session' })
 fastify.register(FastifyCsrfProtection, { sessionPlugin: '@fastify/session' })
 fastify.register(FastifyCsrfProtection, { sessionPlugin: '@fastify/secure-session' })
+fastify.register(FastifyCsrfProtection, { logLevel: 'info' })
 
 expectDeprecated({} as FastifyCsrfOptions)
