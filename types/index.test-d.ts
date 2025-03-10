@@ -21,7 +21,9 @@ async function run () {
     url: '/',
     handler: async (_req, reply) => {
       const token = reply.generateCsrf()
+      const tokenWithOpts = reply.generateCsrf({ userInfo: 'any-string' })
       expectType<string>(token)
+      expectType<string>(tokenWithOpts)
       return token
     }
   })
