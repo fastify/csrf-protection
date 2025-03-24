@@ -159,6 +159,7 @@ Apart from these safeguards, it is extremely important to [use HTTPS for your we
 | `getUserInfo` |  A sync function to get a string of user-specific information to prevent cookie tossing.     |
 | `sessionPlugin` |  The session plugin that you are using (if applicable).     |
 | `csrfOpts` |  The csrf options. See [@fastify/csrf](https://github.com/fastify/csrf).     |
+| `logLevel` | The log level for `fastify.csrfProtection` errors.     |
 
 ### `reply.generateCsrf([opts])`
 
