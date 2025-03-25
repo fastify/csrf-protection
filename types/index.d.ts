@@ -12,10 +12,10 @@ declare module 'fastify' {
   interface FastifyReply {
     /**
      * Generate a token and configure the secret if needed
-     * @param options Serialize options
+     * @param options Serialize options and userInfo
      */
     generateCsrf(
-      options?: fastifyCsrfProtection.CookieSerializeOptions
+      options?: fastifyCsrfProtection.CookieSerializeOptions & { userInfo?: string }
     ): string;
   }
 }
