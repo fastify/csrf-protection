@@ -28,8 +28,8 @@ npm i @fastify/csrf-protection
 ### Compatibility
 | Plugin version | Fastify version |
 | ---------------|-----------------|
-| `^7.x`         | `^5.x`          |
-| `^4.x`         | `^4.x`          |
+| `>=7.x`        | `^5.x`          |
+| `>=4.x <7.x`   | `^4.x`          |
 | `^3.x`         | `^3.x`          |
 
 
