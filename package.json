@@ -58,7 +58,6 @@
   },
   "devDependencies": {
     "@fastify/cookie": "^11.0.1",
-    "@fastify/pre-commit": "^2.1.0",
     "@fastify/secure-session": "^8.0.0",
     "@fastify/session": "^11.0.0",
     "@types/node": "^24.0.8",
@@ -69,9 +68,5 @@
     "proxyquire": "^2.1.3",
     "sinon": "^21.0.0",
     "tsd": "^0.33.0"
-  },
-  "pre-commit": [
-    "lint",
-    "test"
-  ]
+  }
 }
