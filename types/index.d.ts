@@ -20,7 +20,8 @@ declare module 'fastify' {
   }
 }
 
-type FastifyCsrfProtection = FastifyPluginAsync<fastifyCsrfProtection.FastifyCsrfOptions>
+type FastifyCsrfProtection =
+  FastifyPluginAsync<fastifyCsrfProtection.FastifyCsrfProtectionOptions>
 
 declare namespace fastifyCsrfProtection {
   export type CookieSerializeOptions = FastifyCookieSerializeOptions
@@ -64,11 +65,6 @@ declare namespace fastifyCsrfProtection {
     FastifyCsrfProtectionOptionsFastifySession |
     FastifyCsrfProtectionOptionsFastifySecureSession
   )
-
-  /**
-   * @deprecated Use FastifyCsrfProtectionOptions instead
-   */
-  export type FastifyCsrfOptions = FastifyCsrfProtectionOptions
 
   export const fastifyCsrfProtection: FastifyCsrfProtection
   export { fastifyCsrfProtection as default }
