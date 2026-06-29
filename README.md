@@ -142,7 +142,7 @@ The `secret` shown in the code above is strictly just an example. In all cases, 
 - Stored in some external services like KMS, Vault, or something similar
 - Read at run-time and supplied to this option
 - Of significant character length to provide adequate entropy
-- A truly random sequence of characters (You could use [crypto-random-string](https://npm.im/crypto-random-string))
+- A truly random sequence of characters (You could use [crypto-random-string](https://www.npmjs.com/package/crypto-random-string))
 
 Apart from these safeguards, it is extremely important to [use HTTPS for your website/app](https://letsencrypt.org/) to avoid a bunch of other potential security issues like [MITM attacks](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) etc.
 
