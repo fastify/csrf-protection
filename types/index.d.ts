@@ -36,18 +36,16 @@ declare namespace fastifyCsrfProtection {
     getToken?: GetTokenFn;
   }
 
+  type RequiredCSRFHmac = Omit<CSRFOptions, 'hmacKey' | 'userInfo'> &
+    Required<Pick<CSRFOptions, 'hmacKey'>> & { userInfo: true }
+
+  type OptionalCSRFNoUserInfo = Omit<CSRFOptions, 'userInfo'> & {
+    userInfo?: false;
+  }
+
   interface FastifyCsrfProtectionOptionsFastifyCookie {
     sessionPlugin?: '@fastify/cookie';
-    csrfOpts?: | ({
-      [k in keyof CSRFOptions]: k extends 'userInfo'
-        ? true
-        : CSRFOptions[k];
-    } & Required<Pick<CSRFOptions, 'hmacKey'>>)
-  | ({
-    [k in keyof CSRFOptions]: k extends 'userInfo'
-      ? false
-      : CSRFOptions[k];
-  });
+    csrfOpts?: OptionalCSRFNoUserInfo | RequiredCSRFHmac;
   }
 
   interface FastifyCsrfProtectionOptionsFastifySession {
