@@ -209,7 +209,7 @@ function getToken (req) {
 }
 ```
 
-It is recommended to provide a custom `getToken` function for performance and [security](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#use-of-custom-request-headers) reasons.
+It is recommended to provide a custom `getToken` function for performance and [security](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#employing-custom-request-headers-for-ajaxapi) reasons.
 
 ```js
 fastify.register(require('@fastify/csrf-protection'),
