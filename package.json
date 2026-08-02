@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fastify/fastify-csrf.git"
+    "url": "git+https://github.com/fastify/csrf-protection.git"
   },
   "author": "Tarang11",
   "contributors": [
@@ -38,9 +38,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/fastify/fastify-csrf/issues"
+    "url": "https://github.com/fastify/csrf-protection/issues"
   },
-  "homepage": "https://github.com/fastify/fastify-csrf#readme",
+  "homepage": "https://github.com/fastify/csrf-protection#readme",
   "funding": [
     {
       "type": "github",
