@@ -389,3 +389,47 @@ async function runCookieOpts (t, load) {
     t.assert.strictEqual(cookie.path, '/hello')
   })
 }
+
+test('Missing cookie or session object', async (t) => {
+  await t.test('Missing cookies object returns 403 MissingCSRFSecretError', async (t) => {
+    const fastify = Fastify()
+    await fastify.register(fastifyCsrf)
+    fastify.post('/', { onRequest: fastify.csrfProtection }, async () => 'ok')
+
+    const response = await fastify.inject({
+      method: 'POST',
+      path: '/'
+    })
+
+    t.assert.strictEqual(response.statusCode, 403)
+    t.assert.strictEqual(response.json().message, 'Missing csrf secret')
+  })
+
+  await t.test('Missing session in fastify-session returns 403 MissingCSRFSecretError', async (t) => {
+    const fastify = Fastify()
+    await fastify.register(fastifyCsrf, { sessionPlugin: '@fastify/session' })
+    fastify.post('/', { onRequest: fastify.csrfProtection }, async () => 'ok')
+
+    const response = await fastify.inject({
+      method: 'POST',
+      path: '/'
+    })
+
+    t.assert.strictEqual(response.statusCode, 403)
+    t.assert.strictEqual(response.json().message, 'Missing csrf secret')
+  })
+
+  await t.test('Missing session in fastify-secure-session returns 403 MissingCSRFSecretError', async (t) => {
+    const fastify = Fastify()
+    await fastify.register(fastifyCsrf, { sessionPlugin: '@fastify/secure-session' })
+    fastify.post('/', { onRequest: fastify.csrfProtection }, async () => 'ok')
+
+    const response = await fastify.inject({
+      method: 'POST',
+      path: '/'
+    })
+
+    t.assert.strictEqual(response.statusCode, 403)
+    t.assert.strictEqual(response.json().message, 'Missing csrf secret')
+  })
+})

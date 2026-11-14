@@ -67,11 +67,14 @@ async function fastifyCsrfProtection (fastify, opts) {
   let getSecret
 
   if (sessionPlugin === '@fastify/secure-session') {
-    getSecret = function getSecret (req, _reply) { return req.session.get(sessionKey) }
+    getSecret = function getSecret (req, _reply) { return req.session?.get(sessionKey) }
   } else if (sessionPlugin === '@fastify/session') {
-    getSecret = function getSecret (req, _reply) { return req.session[sessionKey] }
+    getSecret = function getSecret (req, _reply) { return req.session?.[sessionKey] }
   } else {
     getSecret = function getSecret (req, reply) {
+      if (!req.cookies) {
+        return undefined
+      }
       return isCookieSigned
         ? reply.unsignCookie(req.cookies[cookieKey] || '').value
         : req.cookies[cookieKey]
@@ -80,8 +83,8 @@ async function fastifyCsrfProtection (fastify, opts) {
 
   function generateCsrfCookie (opts) {
     let secret = isCookieSigned
-      ? this.unsignCookie(this.request.cookies[cookieKey] || '').value
-      : this.request.cookies[cookieKey]
+      ? this.unsignCookie(this.request.cookies?.[cookieKey] || '').value
+      : this.request.cookies?.[cookieKey]
     const userInfo = opts ? opts.userInfo : undefined
     if (!secret) {
       secret = tokens.secretSync()
