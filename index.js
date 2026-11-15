@@ -7,6 +7,7 @@ const createError = require('@fastify/error')
 
 const MissingCSRFSecretError = createError('FST_CSRF_MISSING_SECRET', 'Missing csrf secret', 403)
 const InvalidCSRFTokenError = createError('FST_CSRF_INVALID_TOKEN', 'Invalid csrf token', 403)
+const MissingPluginError = createError('FST_CSRF_MISSING_PLUGIN', "@fastify/csrf-protection requires '%s' to be registered when sessionPlugin is '%s'")
 
 const defaultOptions = {
   cookieKey: '_csrf',
@@ -64,14 +65,27 @@ async function fastifyCsrfProtection (fastify, opts) {
 
   fastify.decorate('csrfProtection', csrfProtection)
 
+  fastify.addHook('onReady', function checkRequiredPlugin (done) {
+    if (sessionPlugin === '@fastify/cookie' && !fastify.hasRequestDecorator('cookies')) {
+      return done(new MissingPluginError('@fastify/cookie', '@fastify/cookie'))
+    }
+    if ((sessionPlugin === '@fastify/session' || sessionPlugin === '@fastify/secure-session') && !fastify.hasRequestDecorator('session')) {
+      return done(new MissingPluginError(sessionPlugin, sessionPlugin))
+    }
+    done()
+  })
+
   let getSecret
 
   if (sessionPlugin === '@fastify/secure-session') {
-    getSecret = function getSecret (req, _reply) { return req.session.get(sessionKey) }
+    getSecret = function getSecret (req, _reply) { return req.session?.get(sessionKey) }
   } else if (sessionPlugin === '@fastify/session') {
-    getSecret = function getSecret (req, _reply) { return req.session[sessionKey] }
+    getSecret = function getSecret (req, _reply) { return req.session?.[sessionKey] }
   } else {
     getSecret = function getSecret (req, reply) {
+      if (!req.cookies) {
+        return undefined
+      }
       return isCookieSigned
         ? reply.unsignCookie(req.cookies[cookieKey] || '').value
         : req.cookies[cookieKey]
@@ -80,8 +94,8 @@ async function fastifyCsrfProtection (fastify, opts) {
 
   function generateCsrfCookie (opts) {
     let secret = isCookieSigned
-      ? this.unsignCookie(this.request.cookies[cookieKey] || '').value
-      : this.request.cookies[cookieKey]
+      ? this.unsignCookie(this.request.cookies?.[cookieKey] || '').value
+      : this.request.cookies?.[cookieKey]
     const userInfo = opts ? opts.userInfo : undefined
     if (!secret) {
       secret = tokens.secretSync()

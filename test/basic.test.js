@@ -389,3 +389,56 @@ async function runCookieOpts (t, load) {
     t.assert.strictEqual(cookie.path, '/hello')
   })
 }
+
+test('Required sessionPlugin validation', async (t) => {
+  await t.test('Missing @fastify/cookie throws FST_CSRF_MISSING_PLUGIN on ready()', async (t) => {
+    const fastify = Fastify()
+    await fastify.register(fastifyCsrf)
+    await t.assert.rejects(
+      async () => fastify.ready(),
+      {
+        code: 'FST_CSRF_MISSING_PLUGIN',
+        message: "@fastify/csrf-protection requires '@fastify/cookie' to be registered when sessionPlugin is '@fastify/cookie'"
+      }
+    )
+  })
+
+  await t.test('Missing @fastify/session throws FST_CSRF_MISSING_PLUGIN on ready()', async (t) => {
+    const fastify = Fastify()
+    await fastify.register(fastifyCsrf, { sessionPlugin: '@fastify/session' })
+    await t.assert.rejects(
+      async () => fastify.ready(),
+      {
+        code: 'FST_CSRF_MISSING_PLUGIN',
+        message: "@fastify/csrf-protection requires '@fastify/session' to be registered when sessionPlugin is '@fastify/session'"
+      }
+    )
+  })
+
+  await t.test('Missing @fastify/secure-session throws FST_CSRF_MISSING_PLUGIN on ready()', async (t) => {
+    const fastify = Fastify()
+    await fastify.register(fastifyCsrf, { sessionPlugin: '@fastify/secure-session' })
+    await t.assert.rejects(
+      async () => fastify.ready(),
+      {
+        code: 'FST_CSRF_MISSING_PLUGIN',
+        message: "@fastify/csrf-protection requires '@fastify/secure-session' to be registered when sessionPlugin is '@fastify/secure-session'"
+      }
+    )
+  })
+
+  await t.test('Missing req.cookies on early hook execution returns 403 MissingCSRFSecretError', async (t) => {
+    const fastify = Fastify()
+    await fastify.register(fastifyCookie, { hook: 'preValidation' })
+    await fastify.register(fastifyCsrf)
+    fastify.post('/', { onRequest: fastify.csrfProtection }, async () => 'ok')
+
+    const response = await fastify.inject({
+      method: 'POST',
+      path: '/'
+    })
+
+    t.assert.strictEqual(response.statusCode, 403)
+    t.assert.strictEqual(response.json().message, 'Missing csrf secret')
+  })
+})
